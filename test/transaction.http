@@ -1,0 +1,15 @@
+### CREATE A TRANSACTION
+POST http://localhost:3000/api/v1/transactions
+Content-Type: application/json
+
+{
+  "fromAddress": "041a4c78950d2d9566e90351d7e25bab28cb64993653a2df1e84e8c72ad8f9a325952d438c9a917571e0e3190fa201fc6fba91155aaf4679f070938cb135f02e60",
+  "toAddress": "041a4c78950d2d9566e90351d7e25bab28cb64993653a2df1e84e8c72ad8f9a325952d438c9a917571e0e3190fa201fc6fba91155aaf4679f070938cb135f02e60",
+  "amount": 100,
+  "fee": 1,
+  "timestamp": 1557346230,
+  "signature": "3046022100c608bf9935d050116af27c3fcd1cd62c376c835b665f5d13527771eb1eb32458022100d265ccb18b0e0f3d92d762370d8655f854b7880b09443ef4021f76deff80c358"
+}
+
+### GET PENDING TRANSACTIONS
+GET http://localhost:3000/api/v1/transactions
