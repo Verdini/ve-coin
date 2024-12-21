@@ -15,23 +15,24 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Verdini/VeCoin.git"
+    "url": "git+https://github.com/verdini/ve-coin.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Verdini/VeCoin/issues"
+    "url": "https://github.com/verdini/ve-coin/issues"
   },
-  "homepage": "https://github.com/Verdini/VeCoin#readme",
+  "homepage": "https://github.com/verdini/ve-coin#readme",
   "devDependencies": {
     "@types/elliptic": "^6.4.18",
     "@types/node": "^22.10.2",
-    "@types/supertest": "^6.0.2",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"
   },
   "dependencies": {
+    "@fastify/swagger": "^9.4.0",
+    "@fastify/swagger-ui": "^5.2.0",
     "elliptic": "^6.5.7",
     "fastify": "^5.1.0"
   }

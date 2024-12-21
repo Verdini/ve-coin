@@ -5,9 +5,9 @@ import WebApi from "../../webapi";
 describe("Wallet's endpoint test", () => {
   let app;
 
-  before(() => {
+  before(async () => {
     app = new WebApi();
-    app.Init();
+    await app.Init();
   });
 
   it("should create a valid Wallet", async () => {

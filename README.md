@@ -11,14 +11,17 @@ _⚠️ For education purposes only. This is by no means a complete implementati
 ## Setup project
 
 Select the correct Node.js version (bigger or equal 22)
+
 `nvm use`
 
 Install the dependencies
+
 `npm ci`
 
 ## Running project
 
 Run locally
+
 `npm run dev`
 
 Go to http://localhost:3000
@@ -26,6 +29,7 @@ Go to http://localhost:3000
 ## Automated test
 
 Run locally
+
 `npm run test`
 
 # Project structure

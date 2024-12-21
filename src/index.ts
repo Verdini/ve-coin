@@ -2,7 +2,7 @@ import WebApi from "./webapi";
 
 async function bootstrap() {
   const server = new WebApi();
-  server.Init();
-  server.start();
+  await server.Init();
+  await server.Run();
 }
 bootstrap();

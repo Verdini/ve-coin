@@ -7,9 +7,9 @@ import { Transaction } from "../../../lib/core";
 describe("Transaction's endpoint test", () => {
   let app;
 
-  before(() => {
+  before(async () => {
     app = new WebApi();
-    app.Init();
+    await app.Init();
   });
 
   it("should create a valid transaction", async () => {

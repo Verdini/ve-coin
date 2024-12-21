@@ -1,6 +1,10 @@
 import { FastifyInstance, FastifyRequest } from "fastify";
 import { BlockchainService } from "./blockchain.service";
-import { CreateTransactionSchema } from "./blockchain.schema";
+import {
+  CreateTransactionSchema,
+  CreateWalletSchema,
+  GetPendingTransactionsSchema,
+} from "./blockchain.schema";
 import { TransactionDTO } from "./blockchain.dto";
 
 export default function blockchainPlugin(
@@ -10,12 +14,16 @@ export default function blockchainPlugin(
 ) {
   const blockchainService = new BlockchainService();
 
-  // Create a wallet
-  fastify.post("/wallets", (_req, _res) => {
-    return blockchainService.createWallet();
-  });
+  fastify.post(
+    "/wallets",
+    {
+      schema: CreateWalletSchema,
+    },
+    (_req, _res) => {
+      return blockchainService.createWallet();
+    }
+  );
 
-  // Create a transaction
   fastify.post(
     "/transactions",
     {
@@ -26,10 +34,13 @@ export default function blockchainPlugin(
     }
   );
 
-  // View pending transactions
-  fastify.get("/transactions", (req, res) => {
-    return blockchainService.getPendingTransactions();
-  });
+  fastify.get(
+    "/transactions",
+    { schema: GetPendingTransactionsSchema },
+    (req, res) => {
+      return blockchainService.getPendingTransactions();
+    }
+  );
 
   // Mine pending transactions
   fastify.post("/mine", (req, res) => {
