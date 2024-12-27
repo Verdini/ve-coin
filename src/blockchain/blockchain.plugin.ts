@@ -3,16 +3,23 @@ import { BlockchainService } from "./blockchain.service";
 import {
   CreateTransactionSchema,
   CreateWalletSchema,
+  GetBalanceSchema,
+  GetBlockSchema,
+  GetLastBlockSchema,
   GetPendingTransactionsSchema,
+  IsValidChainSchema,
+  MineSchema,
 } from "./blockchain.schema";
 import { TransactionDTO } from "./blockchain.dto";
+import { BlockchainRepositoryMemory } from "./blockchain.repository";
 
 export default function blockchainPlugin(
   fastify: FastifyInstance,
   _opts,
   done
 ) {
-  const blockchainService = new BlockchainService();
+  const blockchainRepo = new BlockchainRepositoryMemory();
+  const blockchainService = new BlockchainService(blockchainRepo);
 
   fastify.post(
     "/wallets",
@@ -29,43 +36,64 @@ export default function blockchainPlugin(
     {
       schema: CreateTransactionSchema,
     },
-    (req: FastifyRequest<{ Body: TransactionDTO }>, _res) => {
-      return blockchainService.createTransaction(req.body);
+    async (req: FastifyRequest<{ Body: TransactionDTO }>, _res) => {
+      return await blockchainService.createTransaction(req.body);
     }
   );
 
   fastify.get(
     "/transactions",
     { schema: GetPendingTransactionsSchema },
-    (req, res) => {
-      return blockchainService.getPendingTransactions();
+    async (_req, _res) => {
+      return await blockchainService.getPendingTransactions();
     }
   );
 
-  // Mine pending transactions
-  fastify.post("/mine", (req, res) => {
-    return {};
+  fastify.post("/mine", { schema: MineSchema }, async (_req, _res) => {
+    return await blockchainService.mine();
   });
 
-  // Audit the blockchain
-  fastify.get("/chain/valid", (req, res) => {
-    return {};
-  });
+  fastify.get(
+    "/chain/valid",
+    { schema: IsValidChainSchema },
+    async (_req, _res) => {
+      return await blockchainService.isValidChain();
+    }
+  );
 
-  //Get the last block
-  fastify.get("/chain/blocks/last", (req, res) => {
-    return {};
-  });
+  fastify.get(
+    "/chain/blocks/last",
+    { schema: GetLastBlockSchema },
+    async (req, res) => {
+      return await blockchainService.getLastBlock();
+    }
+  );
 
-  // Get a specific block
-  fastify.get("/chain/blocks/:block", (req, res) => {
-    return {};
-  });
+  fastify.get(
+    "/chain/blocks/:block",
+    { schema: GetBlockSchema },
+    async (
+      req: FastifyRequest<{
+        Params: { index: number };
+      }>,
+      _res
+    ) => {
+      return await blockchainService.getBlock(req.params.index);
+    }
+  );
 
-  // Get the balance of an address
-  fastify.get("/chain/addresses/:address", (req, res) => {
-    return {};
-  });
+  fastify.get(
+    "/chain/addresses/:address",
+    { schema: GetBalanceSchema },
+    async (
+      req: FastifyRequest<{
+        Params: { address: string };
+      }>,
+      _res
+    ) => {
+      return await blockchainService.getBalance(req.params.address);
+    }
+  );
 
   done();
 }

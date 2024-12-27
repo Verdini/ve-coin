@@ -16,6 +16,14 @@ export class Block {
     this.hash = "";
   }
 
+  get PreviousHash(): string {
+    return this.previousHash;
+  }
+
+  get Transactions(): Transaction[] {
+    return this.transactions;
+  }
+
   Hash(): string {
     return crypto
       .createHash("sha256")
@@ -49,6 +57,7 @@ export class Block {
 
 export class GenesisBlock extends Block {
   constructor() {
-    super(new Date(), []);
+    const transactions = [];
+    super(new Date(), transactions);
   }
 }

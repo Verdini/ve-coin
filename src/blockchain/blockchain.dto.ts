@@ -8,8 +8,9 @@ export type TransactionDTO = {
   toAddress: string;
   amount: number;
   fee: number;
-  signature: string;
   timestamp: number;
+  message: string;
+  signature: string;
 };
 
 export type PendingTransactionsDTO = {

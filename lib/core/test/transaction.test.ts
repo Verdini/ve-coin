@@ -13,6 +13,7 @@ describe("Core Transaction tests", () => {
       toAddress: to.Address,
       amount: 100,
       fee: 10,
+      message: "tx1",
       timestamp: new Date().getTime(),
     });
     transaction.Sign(from.Key);
@@ -30,6 +31,7 @@ describe("Core Transaction tests", () => {
       toAddress: to.Address,
       amount: 100,
       fee: 10,
+      message: "tx1",
       timestamp: new Date().getTime(),
     });
     transaction.Sign(to.Key);

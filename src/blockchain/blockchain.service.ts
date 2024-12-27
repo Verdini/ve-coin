@@ -1,18 +1,17 @@
-import { Blockchain, Transaction, Wallet } from "../../lib/core";
+import { Block, Transaction, Wallet } from "../../lib/core";
 import {
   ErrorDTO,
   PendingTransactionsDTO,
   TransactionDTO,
   WalletDTO,
 } from "./blockchain.dto";
+import { IBlockChainRepository } from "./blockchain.repository";
 
 export class BlockchainService {
-  private blockchain: Blockchain;
-  private pendingTransactions: Transaction[];
+  private blockchainRepo: IBlockChainRepository;
 
-  constructor() {
-    this.blockchain = new Blockchain();
-    this.pendingTransactions = [];
+  constructor(blockchainRepo: IBlockChainRepository) {
+    this.blockchainRepo = blockchainRepo;
   }
 
   createWallet(): WalletDTO {
@@ -23,9 +22,9 @@ export class BlockchainService {
     };
   }
 
-  createTransaction(
+  async createTransaction(
     transactionRequest: TransactionDTO
-  ): TransactionDTO | ErrorDTO {
+  ): Promise<TransactionDTO | ErrorDTO> {
     const transaction = new Transaction(transactionRequest);
 
     if (!transaction.IsValid()) {
@@ -36,18 +35,42 @@ export class BlockchainService {
 
     // TODO: check if the sender has enough balance
 
-    this.pendingTransactions.push(transaction);
+    const createdTransaction = await this.blockchainRepo.createTransaction(
+      transaction
+    );
 
-    return transaction.ToJSON();
+    return createdTransaction.ToJSON();
   }
 
-  getPendingTransactions(): PendingTransactionsDTO {
-    const pendingTransactions = this.pendingTransactions.map((transaction) =>
-      transaction.ToJSON()
-    );
+  async getPendingTransactions(): Promise<PendingTransactionsDTO> {
+    const pendingTransactions = this.blockchainRepo
+      .getPendingTransactions()
+      .map((transaction) => transaction.ToJSON());
 
     return {
       transactions: pendingTransactions,
     };
+  }
+
+  async mine() {
+    //TODO: create a new block with pending transactions
+    // validate and add to the blockchain
+    await this.blockchainRepo.mine();
+  }
+
+  async isValidChain() {
+    return await this.blockchainRepo.isValidChain();
+  }
+
+  async getBalance(address: string) {
+    return await this.blockchainRepo.getBalance(address);
+  }
+
+  async getBlock(index: number): Promise<Block | null> {
+    return await this.blockchainRepo.getBlock(index);
+  }
+
+  async getLastBlock(): Promise<Block> {
+    return await this.blockchainRepo.getLastBlock();
   }
 }

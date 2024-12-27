@@ -12,6 +12,7 @@ describe("Core Block tests", () => {
       amount: 100,
       fee: 10,
       timestamp: new Date().getTime(),
+      message: "tx1",
     });
     tx.Sign(from.Key);
     return [tx];
