@@ -1,5 +1,6 @@
 import { Block, GenesisBlock } from "./Block";
 import * as Consensus from "./Consensus";
+import { Transaction } from "./Transaction";
 
 export class Blockchain {
   private chain: Block[];
@@ -18,11 +19,22 @@ export class Blockchain {
     this.AddBlock(genesisBlock);
   }
 
+  get Difficulty(): number {
+    return this.difficulty;
+  }
+
+  get MiningReward(): number {
+    return this.miningReward;
+  }
+
   AddBlock(block: Block): boolean {
     if (!block.IsValid()) return false;
-    if (block.PreviousHash !== this.GetLastBlock().Hash()) return false;
+    if (block.PreviousHash !== this.GetLastBlock().Hash) return false;
+    // TODO: check block details, such as coinbase transaction
 
     this.chain.push(block);
+
+    this.recalculateDifficulty();
     return true;
   }
 
@@ -43,7 +55,7 @@ export class Blockchain {
 
       if (!currentBlock.IsValid()) return false;
 
-      if (currentBlock.PreviousHash !== previousBlock.Hash()) {
+      if (currentBlock.PreviousHash !== previousBlock.Hash) {
         return false;
       }
     }
@@ -67,5 +79,29 @@ export class Blockchain {
     }
 
     return balance;
+  }
+
+  GetWalletTransactions(address: string): Transaction[] {
+    const transactions: Transaction[] = [];
+
+    for (const block of this.chain) {
+      for (const transaction of block.Transactions) {
+        if (
+          transaction.FromAddress === address ||
+          transaction.ToAddress === address
+        ) {
+          transactions.push(transaction);
+        }
+      }
+    }
+
+    return transactions;
+  }
+
+  private recalculateDifficulty() {
+    if (this.chain.length % Consensus.DifficultyAdjustmentInterval === 0) {
+      this.difficulty++;
+      this.miningReward = this.miningReward / 2;
+    }
   }
 }

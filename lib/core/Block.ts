@@ -7,9 +7,9 @@ export class Block {
   private hash: string;
 
   constructor(
-    private timestamp: Date,
+    private timestamp: number,
     private transactions: Transaction[],
-    previousHash: string = ""
+    previousHash: string
   ) {
     this.previousHash = previousHash;
     this.nonce = 0;
@@ -24,7 +24,27 @@ export class Block {
     return this.transactions;
   }
 
-  Hash(): string {
+  get Timestamp(): number {
+    return this.timestamp;
+  }
+
+  get Hash(): string {
+    return this.hash;
+  }
+
+  set Nonce(nonce: number) {
+    this.nonce = nonce;
+  }
+
+  set Hash(hash: string) {
+    this.hash = hash;
+  }
+
+  get Nonce(): number {
+    return this.nonce;
+  }
+
+  GenerateHash(): string {
     return crypto
       .createHash("sha256")
       .update(
@@ -36,20 +56,12 @@ export class Block {
       .digest("hex");
   }
 
-  mine(difficulty: number): string {
-    let hash = "";
-    while (
-      this.Hash().substring(0, difficulty) !== Array(difficulty + 1).join("0")
-    ) {
-      this.nonce++;
-      hash = this.Hash();
-    }
-
-    return hash;
-  }
-
   IsValid() {
-    for (const tx of this.transactions) if (!tx.IsValid()) return false;
+    // First transaction is the coinbase, not checked here
+
+    for (let i = 1; i < this.transactions.length; i++) {
+      if (!this.transactions[i].IsValid()) return false;
+    }
 
     return true;
   }
@@ -58,6 +70,6 @@ export class Block {
 export class GenesisBlock extends Block {
   constructor() {
     const transactions = [];
-    super(new Date(), transactions);
+    super(new Date().getTime(), transactions, "");
   }
 }
