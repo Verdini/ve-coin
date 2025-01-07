@@ -12,7 +12,6 @@ describe("Core Block tests", () => {
       amount: 100,
       fee: 0,
       timestamp: new Date().getTime(),
-      message: "Coinbase transaction",
     });
 
     const tx = new Transaction({
@@ -21,7 +20,6 @@ describe("Core Block tests", () => {
       amount: 100,
       fee: 10,
       timestamp: new Date().getTime(),
-      message: "tx1",
     });
     tx.Sign(from.Key);
     return [coinbaseTx, tx];
@@ -31,7 +29,12 @@ describe("Core Block tests", () => {
     context.mock.timers.enable({ apis: ["Date"], now: 100 });
     const transactions = generateTransactions(new Wallet(), new Wallet());
 
-    const block1 = new Block(new Date().getTime(), transactions, "");
+    const block1 = new Block(
+      new Date().getTime(),
+      transactions,
+      "",
+      "Test block"
+    );
 
     assert.equal(block1.IsValid(), true);
   });

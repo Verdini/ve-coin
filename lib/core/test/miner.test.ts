@@ -12,7 +12,6 @@ describe("Core Miner tests", () => {
       amount: 100,
       fee: 10,
       timestamp: new Date().getTime(),
-      message: "tx1",
     });
     tx.Sign(from.Key);
 
@@ -22,7 +21,6 @@ describe("Core Miner tests", () => {
       amount: 50,
       fee: 15,
       timestamp: new Date().getTime(),
-      message: "tx1",
     });
     tx2.Sign(from.Key);
 
@@ -34,7 +32,7 @@ describe("Core Miner tests", () => {
     const miner = new Miner(wallet);
     const transactions = generateTransactions(new Wallet(), new Wallet());
     console.debug("Starting mining");
-    const block = miner.Mine("", transactions, 0, 100);
+    const block = miner.Mine("", transactions, "Test block", 0, 100);
     console.debug("Finished mining");
 
     assert.deepStrictEqual(block.Transactions[0].ToJSON(), {
@@ -43,7 +41,6 @@ describe("Core Miner tests", () => {
       amount: 125,
       fee: 0,
       timestamp: block.Timestamp,
-      message: "Coinbase transaction",
       signature: "",
     });
 

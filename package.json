@@ -11,7 +11,8 @@
   },
   "scripts": {
     "dev": "node --import tsx --watch src/index.ts",
-    "test": "NODE_ENV=test node --import tsx --test \"**/*.test.ts\""
+    "test": "NODE_ENV=test node --import tsx --test \"**/*.test.ts\"",
+    "sign": "node --import tsx ./lib/tools/SignTransactions.ts"
   },
   "repository": {
     "type": "git",

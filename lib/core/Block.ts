@@ -3,15 +3,18 @@ import { Transaction } from "./Transaction";
 
 export class Block {
   private previousHash: string;
+  private message: string;
   private nonce: number;
   private hash: string;
 
   constructor(
     private timestamp: number,
     private transactions: Transaction[],
-    previousHash: string
+    previousHash: string,
+    message: string = ""
   ) {
     this.previousHash = previousHash;
+    this.message = message;
     this.nonce = 0;
     this.hash = "";
   }
@@ -50,6 +53,7 @@ export class Block {
       .update(
         this.previousHash +
           this.timestamp +
+          this.message +
           JSON.stringify(this.transactions) +
           this.nonce
       )
@@ -69,7 +73,6 @@ export class Block {
 
 export class GenesisBlock extends Block {
   constructor() {
-    const transactions = [];
-    super(new Date().getTime(), transactions, "");
+    super(new Date().getTime(), [], "", "Genesis block");
   }
 }

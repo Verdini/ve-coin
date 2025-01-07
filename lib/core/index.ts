@@ -6,3 +6,5 @@ export { Wallet } from "./Wallet";
 export { Transaction } from "./Transaction";
 export { Block } from "./Block";
 export { Blockchain } from "./Blockchain";
+export { Miner } from "./Miner";
+export { DefaultConsensus } from "./Consensus";

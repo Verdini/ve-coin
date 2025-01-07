@@ -8,7 +8,6 @@ export type TransactionData = {
   amount: number;
   fee: number;
   timestamp: number;
-  message: string;
   signature: string;
 };
 
@@ -21,7 +20,6 @@ export class Transaction {
   private amount: number;
   private fee: number;
   private timestamp: number;
-  private message: string;
   private signature?: string;
 
   constructor({
@@ -30,7 +28,6 @@ export class Transaction {
     amount,
     fee,
     timestamp,
-    message,
     signature,
   }: TransactionParams) {
     this.fromAddress = fromAddress;
@@ -38,7 +35,6 @@ export class Transaction {
     this.amount = amount;
     this.fee = fee;
     this.timestamp = timestamp;
-    this.message = message;
     this.signature = signature;
   }
 
@@ -62,10 +58,6 @@ export class Transaction {
     return this.timestamp;
   }
 
-  get Message(): string {
-    return this.message;
-  }
-
   Hash(): string {
     return crypto
       .createHash("sha256")
@@ -74,8 +66,7 @@ export class Transaction {
           this.toAddress +
           this.amount +
           this.fee +
-          this.timestamp +
-          this.message
+          this.timestamp
       )
       .digest("hex");
   }
@@ -102,7 +93,6 @@ export class Transaction {
       amount: this.amount,
       fee: this.fee,
       timestamp: this.timestamp,
-      message: this.message,
       signature: this.signature || "",
     };
   }

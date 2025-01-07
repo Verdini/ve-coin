@@ -12,6 +12,7 @@ export class Miner {
   Mine(
     previousHash: string,
     transactions: Transaction[],
+    message: string,
     difficulty: number, // number of zeros at the beginning of the hash
     reward: number
   ): Block {
@@ -27,13 +28,12 @@ export class Miner {
       amount: reward + feeAmount,
       fee: 0,
       timestamp,
-      message: "Coinbase transaction",
     });
     transactions.unshift(coinbaseTx);
 
     // TODO: implement fee to miner
 
-    const block = new Block(timestamp, transactions, previousHash);
+    const block = new Block(timestamp, transactions, previousHash, message);
 
     let hash = "";
     while (

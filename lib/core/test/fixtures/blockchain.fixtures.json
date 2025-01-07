@@ -1,0 +1,62 @@
+{
+  "wallets": [
+    {
+      "address": "041a4c78950d2d9566e90351d7e25bab28cb64993653a2df1e84e8c72ad8f9a325952d438c9a917571e0e3190fa201fc6fba91155aaf4679f070938cb135f02e60",
+      "privateKey": "111d7f5815c31f382216fb1b56445bd21801313a44075835e03fa0d4a1643836"
+    },
+    {
+      "address": "04b14b6fb7dc42f8b7b6abd2fa9330826a889df35681efb15b69433e91bf807c63e17be7e5096c657490d17abb99f5026816598fe8dfaf1e7901607e6a06977550",
+      "privateKey": "88442a3f3ee8efa370c021dd6983ed7c1ed36ef50f17934df0ea7a066baf5f8a"
+    },
+    {
+      "address": "04bd790957ccaac2ae1bffe29e566dabdc3b77b051b87b7a376dad8831480a632c502db6e86b3475aadfde7c81d08a66cebd3d62f0d53b6056a0ed2e21afaf1f76",
+      "privateKey": "81333c57e8a6edbc9d06c4413c6f5efcb9ad5f63970f9d2ae6541c23f20e21c3"
+    },
+    {
+      "address": "04a52f36fbeaa9bb6da38c861929da407223d97c271bf5c2f7577345c16cbf9d60cc41cb0dd1bac0f6364c60a0cde6df6ac4d7790f2b0c47b32b73afa032041a06",
+      "privateKey": "ed01af4f95864f36736e6a786574257ebe2197a30e6c7de6c8a4adbf62767dcd"
+    }
+  ],
+  "consensus": {
+    "BlockInterval": 4,
+    "InitialDifficulty": 1,
+    "DifficultyStep": 1,
+    "InitialMiningReward": 100,
+    "MiningRewardStep": 0.5,
+    "MaxCoins": 21000000
+  },
+  "transactions": [
+    {
+      "fromAddress": "041a4c78950d2d9566e90351d7e25bab28cb64993653a2df1e84e8c72ad8f9a325952d438c9a917571e0e3190fa201fc6fba91155aaf4679f070938cb135f02e60",
+      "toAddress": "04b14b6fb7dc42f8b7b6abd2fa9330826a889df35681efb15b69433e91bf807c63e17be7e5096c657490d17abb99f5026816598fe8dfaf1e7901607e6a06977550",
+      "amount": 50,
+      "fee": 5,
+      "timestamp": 1736001160,
+      "signature": "3045022008a29344614b3ffce5146d12d7154a56f328cb451f4b819712fb29d49c32bbcc022100f3a5e0acefae7a175843a12c612a0855174a6e4826e4d17c663b16f357ddb697"
+    },
+    {
+      "fromAddress": "041a4c78950d2d9566e90351d7e25bab28cb64993653a2df1e84e8c72ad8f9a325952d438c9a917571e0e3190fa201fc6fba91155aaf4679f070938cb135f02e60",
+      "toAddress": "04bd790957ccaac2ae1bffe29e566dabdc3b77b051b87b7a376dad8831480a632c502db6e86b3475aadfde7c81d08a66cebd3d62f0d53b6056a0ed2e21afaf1f76",
+      "amount": 50,
+      "fee": 5,
+      "timestamp": 1736001161,
+      "signature": "304502204f6a7fe02d772aac16cfc7858aa350d95c4bc460e15b31be29ca680eab15a1cc0221008b0e95b87bddfa852d3dc2e66f35d5e6aab33e501a1beb854110c5a57372ea55"
+    },
+    {
+      "fromAddress": "04b14b6fb7dc42f8b7b6abd2fa9330826a889df35681efb15b69433e91bf807c63e17be7e5096c657490d17abb99f5026816598fe8dfaf1e7901607e6a06977550",
+      "toAddress": "04a52f36fbeaa9bb6da38c861929da407223d97c271bf5c2f7577345c16cbf9d60cc41cb0dd1bac0f6364c60a0cde6df6ac4d7790f2b0c47b32b73afa032041a06",
+      "amount": 25,
+      "fee": 5,
+      "timestamp": 1736001162,
+      "signature": "304502200c2326169a3171fa1dc4c6b0d9fbbc772894a8e960e0f776e677932a87b98102022100f28a3585141f418426632df52b251b0e0431d42c0e11fe4dbdb3d617ef3fd2cd"
+    },
+    {
+      "fromAddress": "04bd790957ccaac2ae1bffe29e566dabdc3b77b051b87b7a376dad8831480a632c502db6e86b3475aadfde7c81d08a66cebd3d62f0d53b6056a0ed2e21afaf1f76",
+      "toAddress": "04a52f36fbeaa9bb6da38c861929da407223d97c271bf5c2f7577345c16cbf9d60cc41cb0dd1bac0f6364c60a0cde6df6ac4d7790f2b0c47b32b73afa032041a06",
+      "amount": 25,
+      "fee": 5,
+      "timestamp": 1736001163,
+      "signature": "30460221008f9aa053ef1e502e445a2b400cdd424e512c6eb69a7dc25d9fcb768101100c98022100c54cd0b1804ba66462a40aeea7e127c4c27212a7e4878c5c0a047e3f045110ed"
+    }
+  ]
+}

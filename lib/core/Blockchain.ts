@@ -1,30 +1,45 @@
 import { Block, GenesisBlock } from "./Block";
-import * as Consensus from "./Consensus";
+import { IConsensus } from "./Consensus";
 import { Transaction } from "./Transaction";
 
 export class Blockchain {
   private chain: Block[];
-  private difficulty: number;
-  private miningReward: number;
+  private memPool: Transaction[];
+  private consensus: IConsensus;
 
-  constructor() {
+  constructor(consensus: IConsensus) {
     this.chain = [];
-    this.difficulty = Consensus.Difficulty;
-    this.miningReward = Consensus.MiningReward;
+    this.memPool = [];
+    this.consensus = consensus;
   }
 
   Init() {
-    this.chain = [];
-    const genesisBlock = new GenesisBlock();
-    this.AddBlock(genesisBlock);
+    this.chain = [new GenesisBlock()];
   }
 
   get Difficulty(): number {
-    return this.difficulty;
+    return (
+      this.consensus.InitialDifficulty +
+      this.consensus.DifficultyStep *
+        Math.floor(this.chain.length / this.consensus.BlockInterval)
+    );
   }
 
   get MiningReward(): number {
-    return this.miningReward;
+    return (
+      this.consensus.InitialMiningReward /
+      Math.pow(2, Math.floor(this.chain.length / this.consensus.BlockInterval))
+    );
+  }
+
+  GetMemPoolTransactions(): Transaction[] {
+    const pendingTransactions = this.memPool;
+    this.memPool = [];
+    return pendingTransactions;
+  }
+
+  AddTransactionsMemPool(transactions: Transaction[]): void {
+    this.memPool.push(...transactions);
   }
 
   AddBlock(block: Block): boolean {
@@ -34,7 +49,6 @@ export class Blockchain {
 
     this.chain.push(block);
 
-    this.recalculateDifficulty();
     return true;
   }
 
@@ -69,7 +83,7 @@ export class Blockchain {
     for (const block of this.chain) {
       for (const transaction of block.Transactions) {
         if (transaction.FromAddress === address) {
-          balance -= transaction.Amount;
+          balance -= transaction.Amount + transaction.Fee;
         }
 
         if (transaction.ToAddress === address) {
@@ -96,12 +110,5 @@ export class Blockchain {
     }
 
     return transactions;
-  }
-
-  private recalculateDifficulty() {
-    if (this.chain.length % Consensus.DifficultyAdjustmentInterval === 0) {
-      this.difficulty++;
-      this.miningReward = this.miningReward / 2;
-    }
   }
 }
