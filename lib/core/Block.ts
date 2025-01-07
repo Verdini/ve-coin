@@ -1,78 +1,108 @@
 import * as crypto from "crypto";
-import { Transaction } from "./Transaction";
+import { isValidTransaction, Transaction } from "./Transaction";
 
-export class Block {
-  private previousHash: string;
-  private message: string;
-  private nonce: number;
-  private hash: string;
-
-  constructor(
-    private timestamp: number,
-    private transactions: Transaction[],
-    previousHash: string,
-    message: string = ""
-  ) {
-    this.previousHash = previousHash;
-    this.message = message;
-    this.nonce = 0;
-    this.hash = "";
-  }
-
-  get PreviousHash(): string {
-    return this.previousHash;
-  }
-
-  get Transactions(): Transaction[] {
-    return this.transactions;
-  }
-
-  get Timestamp(): number {
-    return this.timestamp;
-  }
-
-  get Hash(): string {
-    return this.hash;
-  }
-
-  set Nonce(nonce: number) {
-    this.nonce = nonce;
-  }
-
-  set Hash(hash: string) {
-    this.hash = hash;
-  }
-
-  get Nonce(): number {
-    return this.nonce;
-  }
-
-  GenerateHash(): string {
-    return crypto
-      .createHash("sha256")
-      .update(
-        this.previousHash +
-          this.timestamp +
-          this.message +
-          JSON.stringify(this.transactions) +
-          this.nonce
-      )
-      .digest("hex");
-  }
-
-  IsValid() {
-    // First transaction is the coinbase, not checked here
-
-    for (let i = 1; i < this.transactions.length; i++) {
-      if (!this.transactions[i].IsValid()) return false;
-    }
-
-    return true;
-  }
+export interface BlockHeader {
+  timestamp: number;
+  previousHash: string;
+  message: string;
+  nonce: number;
+  hash: string;
 }
 
-export class GenesisBlock extends Block {
-  constructor() {
-    super(new Date().getTime(), [], "", "Genesis block");
+export interface Block {
+  header: BlockHeader;
+  transactions: Transaction[];
+}
+
+export function getBlockHash(block: Block): string {
+  return crypto
+    .createHash("sha256")
+    .update(
+      block.header.previousHash +
+        block.header.timestamp +
+        block.header.message +
+        block.header.nonce +
+        JSON.stringify(block.transactions)
+    )
+    .digest("hex");
+}
+
+export function isValidBlock(block: Block): boolean {
+  if (block.transactions.length === 0) return false;
+
+  for (let i = 0; i < block.transactions.length; i++) {
+    if (!isValidTransaction(block.transactions[i])) return false;
   }
+
+  return block.header.hash === getBlockHash(block);
+}
+
+export function buildGenesisBlock(): Block {
+  const block: Block = {
+    header: {
+      timestamp: new Date().getTime(),
+      previousHash: "",
+      message: "Genesis Block",
+      nonce: 0,
+      hash: "",
+    },
+    transactions: [],
+  };
+  block.header.hash = getBlockHash(block);
+  return block;
+}
+
+export function mineBlock({
+  previousHash,
+  transactions,
+  message,
+  difficulty,
+  reward,
+  minerAddress,
+}: {
+  previousHash: string;
+  transactions: Transaction[];
+  message: string;
+  difficulty: number;
+  reward: number;
+  minerAddress: string;
+}): Block {
+  const timestamp = new Date().getTime();
+
+  const feeAmount = transactions.reduce((acc, tx) => acc + tx.fee, 0);
+
+  const coinbaseTx = {
+    fromAddress: "",
+    toAddress: minerAddress,
+    amount: reward + feeAmount,
+    fee: 0,
+    timestamp,
+    signature: "",
+  };
+
+  const blockTransactions = [coinbaseTx, ...transactions];
+
+  const block: Block = {
+    header: {
+      timestamp,
+      previousHash,
+      message,
+      nonce: 0,
+      hash: "",
+    },
+    transactions: blockTransactions,
+  };
+
+  let hash = "";
+  while (
+    // while the hash doesn't start with enough zeros
+    hash.substring(0, difficulty) !== Array(difficulty + 1).join("0")
+  ) {
+    block.header.nonce++;
+    hash = getBlockHash(block);
+  }
+
+  block.header.hash = hash;
+
+  return block;
 }

@@ -1,23 +1,24 @@
-export interface IConsensus {
-  BlockInterval: number;
-  InitialDifficulty: number;
-  DifficultyStep: number;
-  InitialMiningReward: number;
-  MiningRewardStep: number;
-  MaxCoins: number;
+export interface Consensus {
+  blockInterval: number;
+  initialDifficulty: number;
+  difficultyStep: number;
+  initialMiningReward: number;
+  miningRewardStep: number;
+  maxCoins: number;
 }
 
-export const DefaultConsensus: IConsensus = {
+export const DefaultConsensus: Consensus = {
   // Number of blocks that need to be mined before the difficulty can be adjusted
-  BlockInterval: 10,
+  blockInterval: 10,
   // Initial difficulty
-  InitialDifficulty: 1,
-  // Difficulty = InitialDifficulty * number of blocks * DifficultyCoefficient
-  DifficultyStep: 1,
+  initialDifficulty: 1,
+  // Increase in difficulty every BlockInterval blocks
+  difficultyStep: 1,
   // Initial mining reward
-  InitialMiningReward: 100,
-  // MiningReward = InitialMiningReward / number of blocks * MiningRewardCoefficient
-  MiningRewardStep: 0.5,
+  initialMiningReward: 100,
+  // Decrease in mining reward every BlockInterval blocks
+  // reward = initial / (step ^ Floor(blockNumber / blockInterval))
+  miningRewardStep: 2,
   // Maximum number of coins
-  MaxCoins: 21000000,
+  maxCoins: 21000000,
 };
