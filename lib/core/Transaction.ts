@@ -24,13 +24,13 @@ export function getTransactionHash(transaction: Transaction): string {
     .digest("hex");
 }
 
-export function getTransactionSignature(
+export function signTransaction(
   transaction: Transaction,
   privateKey: string
-): string {
+): void {
   const key = secp256k1.keyFromPrivate(privateKey);
   const signature = key.sign(getTransactionHash(transaction), "base64");
-  return signature.toDER("hex");
+  transaction.signature = signature.toDER("hex");
 }
 
 export function isValidTransaction(transaction: Transaction): boolean {

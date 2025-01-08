@@ -7,7 +7,7 @@ export interface Wallet {
   key: string;
 }
 
-export function createWallet(): Wallet {
+export function buildWallet(): Wallet {
   const key = secp256k1.genKeyPair();
   return {
     address: key.getPublic("hex"),

@@ -1,122 +1,118 @@
 import { before, describe, it } from "node:test";
 import { Wallet } from "../Wallet";
-import { Transaction } from "../Transaction";
 import assert from "node:assert";
-import { Blockchain } from "../Blockchain";
-import { Miner } from "../Miner";
+import { Blockchain, buildBlockchain } from "../Blockchain";
 import fixtures from "./fixtures/blockchain.fixtures.json";
+import { mineBlock } from "../Block";
 
 describe("Core Blockchain tests", () => {
   let blockchain: Blockchain;
-  let miner: Miner;
   let walletMiner: Wallet;
   let wallet1: Wallet;
   let wallet2: Wallet;
   let wallet3: Wallet;
 
-  const initWallets = () => {
-    const wallets = fixtures.wallets;
-
-    walletMiner = new Wallet(wallets[0].address, wallets[0].privateKey);
-    wallet1 = new Wallet(wallets[1].address, wallets[1].privateKey);
-    wallet2 = new Wallet(wallets[2].address, wallets[2].privateKey);
-    wallet3 = new Wallet(wallets[3].address, wallets[3].privateKey);
-  };
-
   before(() => {
-    blockchain = new Blockchain(fixtures.consensus);
-    blockchain.Init();
+    blockchain = buildBlockchain({
+      consensus: fixtures.consensus,
+    });
 
-    initWallets();
-
-    miner = new Miner(walletMiner);
+    const wallets = fixtures.wallets;
+    walletMiner = { address: wallets[0].address, key: wallets[0].privateKey };
+    wallet1 = { address: wallets[1].address, key: wallets[1].privateKey };
+    wallet2 = { address: wallets[2].address, key: wallets[2].privateKey };
+    wallet3 = { address: wallets[3].address, key: wallets[3].privateKey };
 
     // Mine first empty block and get 100 coins
-    const block = miner.Mine(
-      blockchain.GetLastBlock().Hash,
-      [],
-      "First mined empty block",
-      blockchain.Difficulty,
-      blockchain.MiningReward
-    );
-    blockchain.AddBlock(block);
+    const block = mineBlock({
+      previousHash: blockchain.getLastBlock().header.hash,
+      transactions: [],
+      message: "First mined empty block",
+      difficulty: blockchain.getDifficulty(),
+      reward: blockchain.getMiningReward(),
+      minerAddress: walletMiner.address,
+    });
+    blockchain.addBlock(block);
 
     // Mine second empty block and get 100 coins
-    const block2 = miner.Mine(
-      blockchain.GetLastBlock().Hash,
-      [],
-      "Second mined empty block",
-      blockchain.Difficulty,
-      blockchain.MiningReward
-    );
-    blockchain.AddBlock(block2);
+    const block2 = mineBlock({
+      previousHash: blockchain.getLastBlock().header.hash,
+      transactions: [],
+      message: "Second mined empty block",
+      difficulty: blockchain.getDifficulty(),
+      reward: blockchain.getMiningReward(),
+      minerAddress: walletMiner.address,
+    });
+    blockchain.addBlock(block2);
 
     // Mine third empty block and get 100 coins
-    const block3 = miner.Mine(
-      blockchain.GetLastBlock().Hash,
-      [],
-      "Third mined empty block",
-      blockchain.Difficulty,
-      blockchain.MiningReward
-    );
-    // Miner gets 100 coins as reward for mining the empty block
-    blockchain.AddBlock(block3);
+    const block3 = mineBlock({
+      previousHash: blockchain.getLastBlock().header.hash,
+      transactions: [],
+      message: "Third mined empty block",
+      difficulty: blockchain.getDifficulty(),
+      reward: blockchain.getMiningReward(),
+      minerAddress: walletMiner.address,
+    });
+    blockchain.addBlock(block3);
 
     // Blockchain changes difficulty to 2 and mining reward to 50
 
     // Add transactions to mempool and mine the block
-    blockchain.AddTransactionsMemPool([
-      new Transaction(fixtures.transactions[0]),
-      new Transaction(fixtures.transactions[1]),
+    blockchain.addToMemPool([
+      fixtures.transactions[0],
+      fixtures.transactions[1],
     ]);
-    const block4 = miner.Mine(
-      blockchain.GetLastBlock().Hash,
-      blockchain.GetMemPoolTransactions(),
-      "Fourth mined block",
-      blockchain.Difficulty,
-      blockchain.MiningReward
-    );
-    blockchain.AddBlock(block4);
+    const block4 = mineBlock({
+      previousHash: blockchain.getLastBlock().header.hash,
+      transactions: blockchain.getMemPool(),
+      message: "Fourth mined empty block",
+      difficulty: blockchain.getDifficulty(),
+      reward: blockchain.getMiningReward(),
+      minerAddress: walletMiner.address,
+    });
+    blockchain.addBlock(block4);
 
     // Add transactions to mempool and mine the block
-    blockchain.AddTransactionsMemPool([
-      new Transaction(fixtures.transactions[2]),
-      new Transaction(fixtures.transactions[3]),
+    blockchain.addToMemPool([
+      fixtures.transactions[2],
+      fixtures.transactions[3],
     ]);
-    const block5 = miner.Mine(
-      blockchain.GetLastBlock().Hash,
-      blockchain.GetMemPoolTransactions(),
-      "Fifth mined block",
-      blockchain.Difficulty,
-      blockchain.MiningReward
-    );
-    blockchain.AddBlock(block5);
+    const block5 = mineBlock({
+      previousHash: blockchain.getLastBlock().header.hash,
+      transactions: blockchain.getMemPool(),
+      message: "Fifth mined empty block",
+      difficulty: blockchain.getDifficulty(),
+      reward: blockchain.getMiningReward(),
+      minerAddress: walletMiner.address,
+    });
+    blockchain.addBlock(block5);
   });
 
   it("should check valid blockchain", () => {
-    assert.equal(blockchain.IsValid(), true);
+    assert.equal(blockchain.isValid(), true);
   });
 
   it("should get the last block", () => {
-    const lastBlock = blockchain.GetLastBlock();
+    const lastBlock = blockchain.getLastBlock();
     assert.notEqual(lastBlock, null);
   });
 
   it("should get an specific block", () => {
-    const block = blockchain.GetBlock(0);
+    const block = blockchain.getBlock(0);
     assert.notEqual(block, null);
   });
 
   it("should get the balance of the wallets", () => {
-    assert.equal(blockchain.GetBalance(walletMiner.Address), 310);
-    assert.equal(blockchain.GetBalance(wallet1.Address), 20);
-    assert.equal(blockchain.GetBalance(wallet2.Address), 20);
-    assert.equal(blockchain.GetBalance(wallet3.Address), 50);
+    assert.equal(blockchain.getBalance(walletMiner.address), 310);
+    assert.equal(blockchain.getBalance(wallet1.address), 20);
+    assert.equal(blockchain.getBalance(wallet2.address), 20);
+    assert.equal(blockchain.getBalance(wallet3.address), 50);
   });
 
   it("should check difficulty and mining reward", () => {
-    const difficulty = blockchain.Difficulty;
-    const miningReward = blockchain.MiningReward;
+    const difficulty = blockchain.getDifficulty();
+    const miningReward = blockchain.getMiningReward();
 
     assert.equal(difficulty, 2);
     assert.equal(miningReward, 50);

@@ -1,40 +1,42 @@
 import { describe, it } from "node:test";
-import { Wallet } from "../Wallet";
-import { Transaction } from "../Transaction";
+import { buildWallet } from "../Wallet";
+import {
+  isValidTransaction,
+  signTransaction,
+  Transaction,
+} from "../Transaction";
 import assert from "node:assert";
 
 describe("Core Transaction tests", () => {
   it("should create a valid transaction", () => {
-    const from = new Wallet();
-    const to = new Wallet();
+    const from = buildWallet();
+    const to = buildWallet();
 
-    const transaction = new Transaction({
-      fromAddress: from.Address,
-      toAddress: to.Address,
+    const transaction = {
+      fromAddress: from.address,
+      toAddress: to.address,
       amount: 100,
       fee: 10,
       timestamp: new Date().getTime(),
-    });
-    transaction.Sign(from.Key);
+    } as Transaction;
+    signTransaction(transaction, from.key);
 
-    const isValid = transaction.IsValid();
-    assert.equal(isValid, true);
+    assert.equal(isValidTransaction(transaction), true);
   });
 
-  it("should validate transaction correctly", () => {
-    const from = new Wallet();
-    const to = new Wallet();
+  it("should generate a invalid transaction", () => {
+    const from = buildWallet();
+    const to = buildWallet();
 
-    const transaction = new Transaction({
-      fromAddress: from.Address,
-      toAddress: to.Address,
+    const transaction = {
+      fromAddress: from.address,
+      toAddress: to.address,
       amount: 100,
       fee: 10,
       timestamp: new Date().getTime(),
-    });
-    transaction.Sign(to.Key);
+    } as Transaction;
+    signTransaction(transaction, to.key);
 
-    const isValid = transaction.IsValid();
-    assert.equal(isValid, false);
+    assert.equal(isValidTransaction(transaction), false);
   });
 });

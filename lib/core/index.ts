@@ -3,12 +3,12 @@
 // Users should only import this file to use Vecoin
 
 export type { Wallet } from "./Wallet";
-export { createWallet } from "./Wallet";
+export { buildWallet } from "./Wallet";
 
 export type { Transaction } from "./Transaction";
 export {
   getTransactionHash,
-  getTransactionSignature,
+  signTransaction,
   isValidTransaction,
 } from "./Transaction";
 
@@ -21,15 +21,6 @@ export {
 } from "./Block";
 
 export type { Blockchain } from "./Blockchain";
-export {
-  buildBlockchain,
-  getBlockchainDifficulty,
-  getBlockchainMiningReward,
-  getBlock,
-  getLastBlock,
-  getMemPool,
-  AddToMemPool,
-  AddToBlockchain,
-} from "./Blockchain";
+export { buildBlockchain } from "./Blockchain";
 
 export { DefaultConsensus } from "./Consensus";

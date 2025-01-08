@@ -18,12 +18,12 @@
     }
   ],
   "consensus": {
-    "BlockInterval": 4,
-    "InitialDifficulty": 1,
-    "DifficultyStep": 1,
-    "InitialMiningReward": 100,
-    "MiningRewardStep": 0.5,
-    "MaxCoins": 21000000
+    "blockInterval": 4,
+    "initialDifficulty": 1,
+    "difficultyStep": 1,
+    "initialMiningReward": 100,
+    "miningRewardStep": 2,
+    "maxCoins": 21000000
   },
   "transactions": [
     {
