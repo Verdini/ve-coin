@@ -12,43 +12,16 @@ const loggerLevel = {
   test: { level: "warn" },
 };
 
-export default class WebApi {
-  private server;
-  private env: Env;
+export async function buildWebApi() {
+  const env = (process.env.NODE_ENV as Env) || "development";
+  const server = fastify({
+    logger: loggerLevel[env],
+  });
 
-  constructor() {
-    this.env = (process.env.NODE_ENV as Env) || "development";
+  const initSwagger = async () => {
+    if (env === "test") return;
 
-    this.server = fastify({
-      logger: loggerLevel[this.env],
-    });
-  }
-
-  async Init() {
-    await this.initSwagger();
-    await this.server.register(healthcheckPlugin, { prefix: "/api/v1" });
-    await this.server.register(blockchainPlugin, { prefix: "/api/v1" });
-
-    await this.server.ready();
-  }
-
-  GetServer() {
-    return this.server;
-  }
-
-  async Run() {
-    try {
-      await this.server.listen({ port: 3000 });
-    } catch (err) {
-      this.server.log.error(err);
-      process.exit(1);
-    }
-  }
-
-  private async initSwagger() {
-    if (this.env === "test") return;
-
-    await this.server.register(swagger, {
+    await server.register(swagger, {
       openapi: {
         info: {
           title: "Ve Coin API",
@@ -58,7 +31,7 @@ export default class WebApi {
       },
     });
 
-    await this.server.register(swaggerUi, {
+    await server.register(swaggerUi, {
       routePrefix: "/api/docs",
       uiConfig: {
         docExpansion: "full",
@@ -79,5 +52,13 @@ export default class WebApi {
       },
       transformSpecificationClone: true,
     });
-  }
+  };
+
+  await initSwagger();
+  await server.register(healthcheckPlugin, { prefix: "/api/v1" });
+  await server.register(blockchainPlugin, { prefix: "/api/v1" });
+
+  await server.ready();
+
+  return server;
 }

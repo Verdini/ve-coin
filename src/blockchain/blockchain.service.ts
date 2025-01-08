@@ -1,4 +1,10 @@
-import { Block, Transaction, Wallet } from "../../lib/core";
+import {
+  Block,
+  buildWallet,
+  isValidTransaction,
+  Transaction,
+  Wallet,
+} from "../../lib/core";
 import {
   ErrorDTO,
   PendingTransactionsDTO,
@@ -15,19 +21,19 @@ export class BlockchainService {
   }
 
   createWallet(): WalletDTO {
-    const wallet = new Wallet();
+    const { address, key } = buildWallet();
     return {
-      address: wallet.Address,
-      key: wallet.Key,
+      address,
+      key,
     };
   }
 
   async createTransaction(
     transactionRequest: TransactionDTO
   ): Promise<TransactionDTO | ErrorDTO> {
-    const transaction = new Transaction(transactionRequest);
+    const transaction = { ...transactionRequest };
 
-    if (!transaction.IsValid()) {
+    if (!isValidTransaction(transaction)) {
       return {
         message: "Invalid transaction",
       };
@@ -39,13 +45,11 @@ export class BlockchainService {
       transaction
     );
 
-    return createdTransaction.ToJSON();
+    return createdTransaction;
   }
 
   async getPendingTransactions(): Promise<PendingTransactionsDTO> {
-    const pendingTransactions = this.blockchainRepo
-      .getPendingTransactions()
-      .map((transaction) => transaction.ToJSON());
+    const pendingTransactions = this.blockchainRepo.getPendingTransactions();
 
     return {
       transactions: pendingTransactions,

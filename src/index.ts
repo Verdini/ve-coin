@@ -1,8 +1,10 @@
-import WebApi from "./webapi";
+import { buildWebApi } from "./webapi";
 
-async function bootstrap() {
-  const server = new WebApi();
-  await server.Init();
-  await server.Run();
+const server = await buildWebApi();
+
+try {
+  await server.listen({ port: 3000 });
+} catch (err) {
+  server.log.error(err);
+  process.exit(1);
 }
-bootstrap();

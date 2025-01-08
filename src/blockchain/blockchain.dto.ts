@@ -9,7 +9,6 @@ export type TransactionDTO = {
   amount: number;
   fee: number;
   timestamp: number;
-  message: string;
   signature: string;
 };
 

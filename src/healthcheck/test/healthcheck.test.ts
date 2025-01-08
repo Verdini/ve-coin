@@ -1,17 +1,16 @@
 import { before, describe, it } from "node:test";
 import assert from "node:assert";
-import WebApi from "../../webapi";
+import { buildWebApi } from "../../webapi";
 
 describe("Healthcheck endpoint test", () => {
-  let app;
+  let server;
 
   before(async () => {
-    app = new WebApi();
-    await app.Init();
+    server = await buildWebApi();
   });
 
   it("should return status ok", async () => {
-    app.GetServer().inject(
+    server.inject(
       {
         method: "GET",
         url: "/api/v1/healthcheck",

@@ -1,42 +1,41 @@
 import { before, describe, it } from "node:test";
 import assert from "node:assert";
-import WebApi from "../../webapi";
-import { Wallet } from "../../../lib/core";
+import WebApi, { buildWebApi } from "../../webapi";
+import { buildWallet, signTransaction, Wallet } from "../../../lib/core";
 import { Transaction } from "../../../lib/core";
 
 describe("Transaction's endpoint test", () => {
-  let app;
+  let server;
 
   before(async () => {
-    app = new WebApi();
-    await app.Init();
+    server = await buildWebApi();
   });
 
   it("should create a valid transaction", async () => {
-    const from = new Wallet();
-    const to = new Wallet();
+    const from = buildWallet();
+    const to = buildWallet();
 
-    const transaction = new Transaction({
-      fromAddress: from.Address,
-      toAddress: to.Address,
+    const transaction = {
+      fromAddress: from.address,
+      toAddress: to.address,
       amount: 100,
       fee: 10,
-      message: "tx1",
       timestamp: new Date().getTime(),
-    });
-    transaction.Sign(from.Key);
+      signature: "",
+    };
+    signTransaction(transaction, from.key);
 
-    const resPost = await app.GetServer().inject({
+    const resPost = await server.inject({
       method: "POST",
       url: "/api/v1/transactions",
-      payload: transaction.ToJSON(),
+      payload: transaction,
     });
 
     assert.equal(resPost.statusCode, 200);
     const resPostParsed = JSON.parse(resPost.payload);
-    assert.deepEqual(resPostParsed, transaction.ToJSON());
+    assert.deepEqual(resPostParsed, transaction);
 
-    const resGet = await app.GetServer().inject({
+    const resGet = await server.inject({
       method: "GET",
       url: "/api/v1/transactions",
     });
@@ -45,24 +44,24 @@ describe("Transaction's endpoint test", () => {
 
     const resGetParsed = JSON.parse(resGet.payload);
     const pendingTransaction = {
-      transactions: [transaction.ToJSON()],
+      transactions: [transaction],
     };
     assert.deepEqual(resGetParsed, pendingTransaction);
   });
 
   it("should return a bad request", async () => {
-    const from = new Wallet();
-    const to = new Wallet();
+    const from = buildWallet();
+    const to = buildWallet();
 
     const transaction = {
-      fromAddress: from.Address,
-      toAddress: to.Address,
+      fromAddress: from.address,
+      toAddress: to.address,
       amount: 100,
       fee: 10,
       timestamp: new Date().getTime(),
     };
 
-    app.GetServer().inject(
+    server.inject(
       {
         method: "POST",
         url: "/api/v1/transactions",

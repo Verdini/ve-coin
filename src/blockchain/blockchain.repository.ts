@@ -1,4 +1,10 @@
-import { Block, Blockchain, Transaction } from "../../lib/core";
+import {
+  Block,
+  Blockchain,
+  buildBlockchain,
+  DefaultConsensus,
+  Transaction,
+} from "../../lib/core";
 
 export interface IBlockChainRepository {
   createTransaction(transactionRequest: Transaction): Transaction;
@@ -12,41 +18,38 @@ export interface IBlockChainRepository {
 
 export class BlockchainRepositoryMemory implements IBlockChainRepository {
   private blockchain: Blockchain;
-  private pendingTransactions: Transaction[];
 
   constructor() {
-    this.blockchain = new Blockchain();
-    this.pendingTransactions = [];
+    this.blockchain = buildBlockchain({ consensus: DefaultConsensus });
   }
 
   createTransaction(transaction: Transaction): Transaction {
-    this.pendingTransactions.push(transaction);
+    this.blockchain.addToMemPool([transaction]);
     return transaction;
   }
 
   getPendingTransactions(): Transaction[] {
-    return this.pendingTransactions;
+    return this.blockchain.getMemPool();
   }
 
   mine() {
     // TODO: mine the pending transactions
     //this.blockchain.AddBlock(this.pendingTransactions);
-    this.pendingTransactions = [];
   }
 
   isValidChain() {
-    return this.blockchain.IsValid();
+    return this.blockchain.isValid();
   }
 
   getBalance(address: string): number {
-    return this.blockchain.GetBalance(address);
+    return this.blockchain.getBalance(address);
   }
 
   getBlock(index: number): Block | null {
-    return this.blockchain.GetBlock(index);
+    return this.blockchain.getBlock(index);
   }
 
   getLastBlock(): Block {
-    return this.blockchain.GetLastBlock();
+    return this.blockchain.getLastBlock();
   }
 }
