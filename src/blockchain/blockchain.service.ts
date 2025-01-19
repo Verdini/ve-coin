@@ -2,16 +2,14 @@ import {
   Block,
   buildWallet,
   isValidTransaction,
-  Transaction,
-  Wallet,
-} from "../../lib/core";
+} from "../../lib/core/index.ts";
 import {
   ErrorDTO,
   PendingTransactionsDTO,
   TransactionDTO,
   WalletDTO,
-} from "./blockchain.dto";
-import { IBlockChainRepository } from "./blockchain.repository";
+} from "./blockchain.dto.ts";
+import { IBlockChainRepository } from "./blockchain.repository.ts";
 
 export class BlockchainService {
   private blockchainRepo: IBlockChainRepository;
@@ -48,11 +46,11 @@ export class BlockchainService {
     return createdTransaction;
   }
 
-  async getPendingTransactions(): Promise<PendingTransactionsDTO> {
+  getPendingTransactions(): PendingTransactionsDTO {
     const pendingTransactions = this.blockchainRepo.getPendingTransactions();
 
     return {
-      transactions: pendingTransactions,
+      transactions: pendingTransactions as TransactionDTO[],
     };
   }
 

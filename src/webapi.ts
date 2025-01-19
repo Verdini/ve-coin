@@ -1,8 +1,9 @@
 import fastify from "fastify";
 import swagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger-ui";
-import blockchainPlugin from "./blockchain/blockchain.plugin";
-import healthcheckPlugin from "./healthcheck/healthcheck.plugin";
+import blockchainPlugin from "./blockchain/blockchain.plugin.ts";
+import healthcheckPlugin from "./healthcheck/healthcheck.plugin.ts";
+import process from "node:process";
 
 type Env = "development" | "production" | "test";
 

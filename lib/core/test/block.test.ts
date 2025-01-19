@@ -1,8 +1,8 @@
 import { describe, it } from "node:test";
-import { buildWallet } from "../Wallet";
-import { signTransaction, Transaction } from "../Transaction";
+import { buildWallet } from "../Wallet.ts";
+import { signTransaction, Transaction } from "../Transaction.ts";
 import assert from "node:assert";
-import { Block, isValidBlock, mineBlock } from "../Block";
+import { Block, isValidBlock, mineBlock } from "../Block.ts";
 
 describe("Core Block tests", () => {
   it("should create a valid block", (context) => {

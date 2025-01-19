@@ -1,16 +1,17 @@
 import { before, describe, it } from "node:test";
 import assert from "node:assert";
-import { buildWebApi } from "../../webapi";
+import { buildWebApi } from "../../webapi.ts";
+import { FastifyInstance } from "fastify";
 
 describe("Wallet's endpoint test", () => {
-  let server;
+  let server: FastifyInstance;
 
   before(async () => {
     server = await buildWebApi();
   });
 
   it("should create a valid Wallet", async () => {
-    server.inject(
+    await server.inject(
       {
         method: "POST",
         url: "/api/v1/wallets",
@@ -18,7 +19,7 @@ describe("Wallet's endpoint test", () => {
       (_err, response) => {
         assert.equal(response?.statusCode, 200);
 
-        const payload = JSON.parse(response.payload);
+        const payload = JSON.parse(response?.payload || "");
 
         assert(payload.address, "Address is missing in the response payload");
         assert(payload.key, "Key is missing in the response payload");

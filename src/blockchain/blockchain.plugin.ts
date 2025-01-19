@@ -1,5 +1,5 @@
 import { FastifyInstance, FastifyRequest } from "fastify";
-import { BlockchainService } from "./blockchain.service";
+import { BlockchainService } from "./blockchain.service.ts";
 import {
   CreateTransactionSchema,
   CreateWalletSchema,
@@ -9,14 +9,14 @@ import {
   GetPendingTransactionsSchema,
   IsValidChainSchema,
   MineSchema,
-} from "./blockchain.schema";
-import { TransactionDTO } from "./blockchain.dto";
-import { BlockchainRepositoryMemory } from "./blockchain.repository";
+} from "./blockchain.schema.ts";
+import { TransactionDTO } from "./blockchain.dto.ts";
+import { BlockchainRepositoryMemory } from "./blockchain.repository.ts";
 
 export default function blockchainPlugin(
   fastify: FastifyInstance,
-  _opts,
-  done
+  _opts: unknown,
+  done: () => void
 ) {
   const blockchainRepo = new BlockchainRepositoryMemory();
   const blockchainService = new BlockchainService(blockchainRepo);
@@ -64,7 +64,7 @@ export default function blockchainPlugin(
   fastify.get(
     "/chain/blocks/last",
     { schema: GetLastBlockSchema },
-    async (req, res) => {
+    async () => {
       return await blockchainService.getLastBlock();
     }
   );

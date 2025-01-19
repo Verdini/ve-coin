@@ -1,5 +1,5 @@
-import { ec } from "elliptic";
-const secp256k1 = new ec("secp256k1");
+import elliptic from "elliptic";
+const secp256k1 = new elliptic.ec("secp256k1");
 
 //
 export interface Wallet {

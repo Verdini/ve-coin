@@ -1,5 +1,5 @@
-import * as crypto from "crypto";
-import { isValidTransaction, Transaction } from "./Transaction";
+import * as crypto from "node:crypto";
+import { isValidTransaction, Transaction } from "./Transaction.ts";
 
 export interface BlockHeader {
   timestamp: number;

@@ -1,10 +1,10 @@
 import { describe, it } from "node:test";
-import { buildWallet } from "../Wallet";
+import { buildWallet } from "../Wallet.ts";
 import {
   isValidTransaction,
   signTransaction,
   Transaction,
-} from "../Transaction";
+} from "../Transaction.ts";
 import assert from "node:assert";
 
 describe("Core Transaction tests", () => {

@@ -4,7 +4,7 @@ import {
   buildBlockchain,
   DefaultConsensus,
   Transaction,
-} from "../../lib/core";
+} from "../../lib/core/index.ts";
 
 export interface IBlockChainRepository {
   createTransaction(transactionRequest: Transaction): Transaction;

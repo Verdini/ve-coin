@@ -1,6 +1,6 @@
-import { Block, buildGenesisBlock, isValidBlock } from "./Block";
-import { Consensus } from "./Consensus";
-import { Transaction } from "./Transaction";
+import { Block, buildGenesisBlock, isValidBlock } from "./Block.ts";
+import { Consensus } from "./Consensus.ts";
+import { Transaction } from "./Transaction.ts";
 
 export interface Blockchain {
   getDifficulty: () => number;

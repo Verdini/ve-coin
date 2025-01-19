@@ -1,6 +1,6 @@
-import * as crypto from "crypto";
-import { ec } from "elliptic";
-const secp256k1 = new ec("secp256k1");
+import * as crypto from "node:crypto";
+import elliptic from "elliptic";
+const secp256k1 = new elliptic.ec("secp256k1");
 
 export interface Transaction {
   fromAddress: string;

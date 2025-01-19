@@ -1,10 +1,14 @@
-import { buildWebApi } from "./webapi";
+import { buildWebApi } from "./webapi.ts";
+import process from "node:process";
 
-const server = await buildWebApi();
+async function main() {
+  const server = await buildWebApi();
 
-try {
-  await server.listen({ port: 3000 });
-} catch (err) {
-  server.log.error(err);
-  process.exit(1);
+  try {
+    await server.listen({ port: 3000 });
+  } catch (err) {
+    server.log.error(err);
+    process.exit(1);
+  }
 }
+main();

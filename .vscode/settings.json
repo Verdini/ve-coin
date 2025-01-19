@@ -5,5 +5,7 @@
   "testify.additionalArgs": "--import tsx",
   "testify.envVars": {
     "NODE_ENV": "test"
-  }
+  },
+  "deno.enable": true,
+  "deno.lint": true
 }

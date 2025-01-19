@@ -1,11 +1,11 @@
 import { before, describe, it } from "node:test";
 import assert from "node:assert";
-import WebApi, { buildWebApi } from "../../webapi";
-import { buildWallet, signTransaction, Wallet } from "../../../lib/core";
-import { Transaction } from "../../../lib/core";
+import { buildWebApi } from "../../webapi.ts";
+import { buildWallet, signTransaction } from "../../../lib/core/index.ts";
+import { FastifyInstance } from "fastify";
 
 describe("Transaction's endpoint test", () => {
-  let server;
+  let server: FastifyInstance;
 
   before(async () => {
     server = await buildWebApi();
@@ -61,7 +61,7 @@ describe("Transaction's endpoint test", () => {
       timestamp: new Date().getTime(),
     };
 
-    server.inject(
+    await server.inject(
       {
         method: "POST",
         url: "/api/v1/transactions",
@@ -70,7 +70,7 @@ describe("Transaction's endpoint test", () => {
       (_err, response) => {
         assert.equal(response?.statusCode, 400);
 
-        const payload = JSON.parse(response.payload);
+        const payload = JSON.parse(response?.payload || "");
 
         assert.deepEqual(payload, {
           statusCode: 400,
