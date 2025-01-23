@@ -17,6 +17,7 @@ export async function buildWebApi() {
   const env = (process.env.NODE_ENV as Env) || "development";
   const server = fastify({
     logger: loggerLevel[env],
+    maxParamLength: 130,
   });
 
   const initSwagger = async () => {

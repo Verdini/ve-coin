@@ -11,10 +11,10 @@ describe("Miners endpoint test", () => {
     server = await buildWebApi();
   });
 
-  it("mine an empty block", async () => {
+  it("should mine an empty block", async () => {
     const miner = buildWallet();
 
-    const res = await server.inject({
+    const resMine = await server.inject({
       method: "POST",
       url: "/api/v1/mine",
       payload: {
@@ -23,6 +23,14 @@ describe("Miners endpoint test", () => {
       },
     });
 
-    assert.equal(res.statusCode, 200);
+    assert.equal(resMine.statusCode, 200);
+
+    const resBalance = await server.inject({
+      method: "GET",
+      url: `/api/v1/chain/addresses/${miner.address}`,
+    });
+    const responseBody = JSON.parse(resBalance.body);
+    assert.equal(resBalance.statusCode, 200);
+    assert.equal(responseBody.balance, 100);
   });
 });

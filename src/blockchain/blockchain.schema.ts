@@ -108,7 +108,9 @@ export const IsValidChainSchema = {
   tags: ["Chain"],
   summary: "Is the chain valid?",
   response: {
-    200: {},
+    200: {
+      isValid: { type: "boolean" },
+    },
   },
 };
 
@@ -198,6 +200,7 @@ export const GetBalanceSchema = {
     200: {
       type: "object",
       properties: {
+        address: { type: "string" },
         balance: { type: "number" },
       },
     },

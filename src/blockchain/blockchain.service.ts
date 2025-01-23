@@ -6,6 +6,8 @@ import {
   mineBlock,
 } from "../../lib/core/index";
 import {
+  BalanceDTO,
+  BlockchainValidationDTO,
   ErrorDTO,
   MineDTO,
   PendingTransactionsDTO,
@@ -58,12 +60,15 @@ export class BlockchainService {
     return this.blockchain.addBlock(newBlock);
   }
 
-  isValidChain() {
-    return this.blockchain.isValid();
+  isValidChain(): BlockchainValidationDTO {
+    return {
+      isValid: this.blockchain.isValid(),
+    };
   }
 
-  getBalance(address: string) {
-    return this.blockchain.getBalance(address);
+  getBalance(address: string): BalanceDTO {
+    const balance = this.blockchain.getBalance(address);
+    return { address, balance };
   }
 
   getBlock(index: number): Block | null {

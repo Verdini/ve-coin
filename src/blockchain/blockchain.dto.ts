@@ -21,6 +21,15 @@ export type MineDTO = {
   message: string;
 };
 
+export type BalanceDTO = {
+  address: string;
+  balance: number;
+};
+
+export type BlockchainValidationDTO = {
+  isValid: boolean;
+};
+
 export type ErrorDTO = {
   code: string;
   message: string;
