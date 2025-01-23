@@ -59,13 +59,11 @@ describe("Core Blockchain tests", () => {
     // Blockchain changes difficulty to 2 and mining reward to 50
 
     // Add transactions to mempool and mine the block
-    blockchain.addToMemPool([
-      fixtures.transactions[0],
-      fixtures.transactions[1],
-    ]);
+    blockchain.addToMemPool(fixtures.transactions[0]);
+    blockchain.addToMemPool(fixtures.transactions[1]);
     const block4 = mineBlock({
       previousHash: blockchain.getLastBlock().header.hash,
-      transactions: blockchain.getMemPool(),
+      transactions: blockchain.takeFromMemPool(),
       message: "Fourth mined empty block",
       difficulty: blockchain.getDifficulty(),
       reward: blockchain.getMiningReward(),
@@ -74,13 +72,11 @@ describe("Core Blockchain tests", () => {
     blockchain.addBlock(block4);
 
     // Add transactions to mempool and mine the block
-    blockchain.addToMemPool([
-      fixtures.transactions[2],
-      fixtures.transactions[3],
-    ]);
+    blockchain.addToMemPool(fixtures.transactions[2]);
+    blockchain.addToMemPool(fixtures.transactions[3]);
     const block5 = mineBlock({
       previousHash: blockchain.getLastBlock().header.hash,
-      transactions: blockchain.getMemPool(),
+      transactions: blockchain.takeFromMemPool(),
       message: "Fifth mined empty block",
       difficulty: blockchain.getDifficulty(),
       reward: blockchain.getMiningReward(),

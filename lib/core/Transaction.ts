@@ -36,6 +36,11 @@ export function signTransaction(
 export function isValidTransaction(transaction: Transaction): boolean {
   if (!transaction.signature || transaction.signature.length === 0)
     return false;
+
+  if (transaction.amount <= 0 || transaction.fee <= 0) return false;
+
+  if (transaction.fromAddress === transaction.toAddress) return false;
+
   const key = secp256k1.keyFromPublic(transaction.fromAddress, "hex");
   return key.verify(getTransactionHash(transaction), transaction.signature);
 }

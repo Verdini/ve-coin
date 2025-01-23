@@ -24,3 +24,6 @@ export type { Blockchain } from "./Blockchain";
 export { buildBlockchain } from "./Blockchain";
 
 export { DefaultConsensus } from "./Consensus";
+
+export type { BlockchainError } from "./Errors";
+export * from "./Errors";

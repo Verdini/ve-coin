@@ -1,15 +1,22 @@
 import { Block, buildGenesisBlock, isValidBlock } from "./Block";
 import { Consensus } from "./Consensus";
-import { Transaction } from "./Transaction";
+import {
+  BlockchainError,
+  InsufficientBalanceError,
+  InvalidBlockError,
+  InvalidTransactionError,
+} from "./Errors";
+import { isValidTransaction, Transaction } from "./Transaction";
 
 export interface Blockchain {
   getDifficulty: () => number;
   getMiningReward: () => number;
   getBlock: (index: number) => Block | null;
   getLastBlock: () => Block;
-  addBlock: (block: Block) => boolean;
+  addBlock: (block: Block) => BlockchainError | null;
+  takeFromMemPool: () => Transaction[];
   getMemPool: () => Transaction[];
-  addToMemPool: (transactions: Transaction[]) => void;
+  addToMemPool: (transaction: Transaction) => BlockchainError | null;
   getBalance: (address: string) => number;
   isValid: () => boolean;
 }
@@ -49,20 +56,39 @@ export function buildBlockchain({
     return chain[chain.length - 1];
   }
 
-  function addBlock(block: Block): boolean {
-    if (!isValidBlock(block)) return false;
+  function addBlock(block: Block): BlockchainError | null {
+    if (!isValidBlock(block)) return InvalidBlockError;
+
+    if (block.header.previousHash !== getLastBlock().header.hash)
+      return InvalidBlockError;
+
     // TO DO: check hash under difficulty
-    if (block.header.previousHash !== getLastBlock().header.hash) return false;
+    // TO DO: check balances
+
     chain.push(block);
-    return true;
+    return null;
   }
 
-  function getMemPool(): Transaction[] {
+  function takeFromMemPool(): Transaction[] {
     return memPool.splice(0, memPool.length);
   }
 
-  function addToMemPool(transactions: Transaction[]): void {
-    memPool.push(...transactions);
+  function getMemPool(): Transaction[] {
+    return memPool;
+  }
+
+  function addToMemPool(transaction: Transaction): BlockchainError | null {
+    if (!isValidTransaction(transaction)) {
+      return InvalidTransactionError;
+    }
+
+    const balance = getBalance(transaction.fromAddress);
+    if (balance < transaction.amount + transaction.fee) {
+      return InsufficientBalanceError;
+    }
+
+    memPool.push(transaction);
+    return null;
   }
 
   function isValid(): boolean {
@@ -96,6 +122,7 @@ export function buildBlockchain({
     getBlock,
     getLastBlock,
     addBlock,
+    takeFromMemPool,
     getMemPool,
     addToMemPool,
     getBalance,

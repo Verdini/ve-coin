@@ -8,10 +8,10 @@ import {
 import assert from "node:assert";
 
 describe("Core Transaction tests", () => {
-  it("should create a valid transaction", () => {
-    const from = buildWallet();
-    const to = buildWallet();
+  const from = buildWallet();
+  const to = buildWallet();
 
+  it("should create a valid transaction", () => {
     const transaction = {
       fromAddress: from.address,
       toAddress: to.address,
@@ -25,9 +25,6 @@ describe("Core Transaction tests", () => {
   });
 
   it("should generate a invalid transaction", () => {
-    const from = buildWallet();
-    const to = buildWallet();
-
     const transaction = {
       fromAddress: from.address,
       toAddress: to.address,
@@ -36,6 +33,32 @@ describe("Core Transaction tests", () => {
       timestamp: new Date().getTime(),
     } as Transaction;
     signTransaction(transaction, to.key);
+
+    assert.equal(isValidTransaction(transaction), false);
+  });
+
+  it("should generate a invalid transaction", () => {
+    const transaction = {
+      fromAddress: from.address,
+      toAddress: from.address,
+      amount: 100,
+      fee: 10,
+      timestamp: new Date().getTime(),
+    } as Transaction;
+    signTransaction(transaction, from.key);
+
+    assert.equal(isValidTransaction(transaction), false);
+  });
+
+  it("should generate a invalid transaction", () => {
+    const transaction = {
+      fromAddress: from.address,
+      toAddress: to.address,
+      amount: 0,
+      fee: 0,
+      timestamp: new Date().getTime(),
+    } as Transaction;
+    signTransaction(transaction, from.key);
 
     assert.equal(isValidTransaction(transaction), false);
   });
