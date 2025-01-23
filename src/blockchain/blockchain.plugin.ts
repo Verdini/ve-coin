@@ -10,16 +10,16 @@ import {
   IsValidChainSchema,
   MineSchema,
 } from "./blockchain.schema";
-import { TransactionDTO } from "./blockchain.dto";
-import { BlockchainRepositoryMemory } from "./blockchain.repository";
+import { MineDTO, TransactionDTO } from "./blockchain.dto";
+import { buildBlockchain, DefaultConsensus } from "../../lib/core";
 
 export default function blockchainPlugin(
   fastify: FastifyInstance,
   _opts: unknown,
   done: () => void
 ) {
-  const blockchainRepo = new BlockchainRepositoryMemory();
-  const blockchainService = new BlockchainService(blockchainRepo);
+  const blockchain = buildBlockchain({ consensus: DefaultConsensus });
+  const blockchainService = new BlockchainService(blockchain);
 
   fastify.post(
     "/wallets",
@@ -49,9 +49,13 @@ export default function blockchainPlugin(
     }
   );
 
-  fastify.post("/mine", { schema: MineSchema }, async (_req, _res) => {
-    return await blockchainService.mine();
-  });
+  fastify.post(
+    "/mine",
+    { schema: MineSchema },
+    async (req: FastifyRequest<{ Body: MineDTO }>, _res) => {
+      return await blockchainService.mine(req.body);
+    }
+  );
 
   fastify.get(
     "/chain/valid",

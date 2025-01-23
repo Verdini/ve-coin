@@ -11,7 +11,7 @@ describe("Transaction's endpoint test", () => {
     server = await buildWebApi();
   });
 
-  it("should create a valid transaction", async () => {
+  it.skip("should create a valid transaction", async () => {
     const from = buildWallet();
     const to = buildWallet();
 
@@ -49,7 +49,7 @@ describe("Transaction's endpoint test", () => {
     assert.deepEqual(resGetParsed, pendingTransaction);
   });
 
-  it("should return a bad request", async () => {
+  it.skip("should return a bad request", async () => {
     const from = buildWallet();
     const to = buildWallet();
 

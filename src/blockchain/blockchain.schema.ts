@@ -1,3 +1,13 @@
+const badRequestResponse = {
+  type: "object",
+  properties: {
+    code: { type: "string" },
+    error: { type: "string" },
+    message: { type: "string" },
+    statusCode: { type: "number" },
+  },
+};
+
 export const CreateWalletSchema = {
   description: "Create a wallet",
   tags: ["Wallets"],
@@ -14,7 +24,7 @@ export const CreateWalletSchema = {
 };
 
 export const CreateTransactionSchema = {
-  description: "Create a transaction",
+  description: "Create a transaction and send to blockchain MemPool",
   tags: ["Transactions"],
   summary: "Create a transaction",
   body: {
@@ -43,20 +53,12 @@ export const CreateTransactionSchema = {
         signature: { type: "string" },
       },
     },
-    400: {
-      type: "object",
-      properties: {
-        code: { type: "string" },
-        error: { type: "string" },
-        message: { type: "string" },
-        statusCode: { type: "number" },
-      },
-    },
+    400: badRequestResponse,
   },
 };
 
 export const GetPendingTransactionsSchema = {
-  description: "Get pending transactions",
+  description: "Get pending transactions in MemPool",
   tags: ["Transactions"],
   summary: "Pending transactions",
   response: {
@@ -84,11 +86,20 @@ export const GetPendingTransactionsSchema = {
 };
 
 export const MineSchema = {
-  description: "Mine pending transactions",
-  tags: ["Transactions"],
+  description: "Mine pending transactions in MemPool",
+  tags: ["Miner"],
   summary: "Mine transactions",
+  body: {
+    type: "object",
+    required: ["minerAddress"],
+    properties: {
+      minerAddress: { type: "string" },
+      message: { type: "string" },
+    },
+  },
   response: {
     200: {},
+    400: badRequestResponse,
   },
 };
 

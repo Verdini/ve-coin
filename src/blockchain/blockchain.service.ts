@@ -1,18 +1,20 @@
-import { Block, buildWallet, isValidTransaction } from "../../lib/core/index";
+import {
+  Block,
+  Blockchain,
+  buildWallet,
+  isValidTransaction,
+  mineBlock,
+} from "../../lib/core/index";
 import {
   ErrorDTO,
+  MineDTO,
   PendingTransactionsDTO,
   TransactionDTO,
   WalletDTO,
 } from "./blockchain.dto";
-import { IBlockChainRepository } from "./blockchain.repository";
 
 export class BlockchainService {
-  private blockchainRepo: IBlockChainRepository;
-
-  constructor(blockchainRepo: IBlockChainRepository) {
-    this.blockchainRepo = blockchainRepo;
-  }
+  constructor(private blockchain: Blockchain) {}
 
   createWallet(): WalletDTO {
     const { address, key } = buildWallet();
@@ -22,53 +24,53 @@ export class BlockchainService {
     };
   }
 
-  async createTransaction(
+  createTransaction(
     transactionRequest: TransactionDTO
-  ): Promise<TransactionDTO | ErrorDTO> {
+  ): TransactionDTO | ErrorDTO {
     const transaction = { ...transactionRequest };
-
-    if (!isValidTransaction(transaction)) {
-      return {
-        message: "Invalid transaction",
-      };
-    }
-
-    // TODO: check if the sender has enough balance
-
-    const createdTransaction = await this.blockchainRepo.createTransaction(
-      transaction
-    );
-
-    return createdTransaction;
+    const error = this.blockchain.addToMemPool(transaction);
+    return error || transaction;
   }
 
   getPendingTransactions(): PendingTransactionsDTO {
-    const pendingTransactions = this.blockchainRepo.getPendingTransactions();
+    const pendingTransactions = this.blockchain.getMemPool();
 
     return {
       transactions: pendingTransactions as TransactionDTO[],
     };
   }
 
-  async mine() {
-    //TODO: create a new block with pending transactions
-    // validate and add to the blockchain
-    await this.blockchainRepo.mine();
+  mine({ minerAddress, message }: MineDTO): ErrorDTO | null {
+    const transactions = this.blockchain.takeFromMemPool();
+    const lastBlock = this.blockchain.getLastBlock();
+    const difficulty = this.blockchain.getDifficulty();
+    const reward = this.blockchain.getMiningReward();
+
+    const newBlock = mineBlock({
+      previousHash: lastBlock.header.hash,
+      transactions,
+      message,
+      difficulty,
+      reward,
+      minerAddress,
+    });
+
+    return this.blockchain.addBlock(newBlock);
   }
 
-  async isValidChain() {
-    return await this.blockchainRepo.isValidChain();
+  isValidChain() {
+    return this.blockchain.isValid();
   }
 
-  async getBalance(address: string) {
-    return await this.blockchainRepo.getBalance(address);
+  getBalance(address: string) {
+    return this.blockchain.getBalance(address);
   }
 
-  async getBlock(index: number): Promise<Block | null> {
-    return await this.blockchainRepo.getBlock(index);
+  getBlock(index: number): Block | null {
+    return this.blockchain.getBlock(index);
   }
 
-  async getLastBlock(): Promise<Block> {
-    return await this.blockchainRepo.getLastBlock();
+  getLastBlock(): Block {
+    return this.blockchain.getLastBlock();
   }
 }

@@ -16,6 +16,12 @@ export type PendingTransactionsDTO = {
   transactions: TransactionDTO[];
 };
 
+export type MineDTO = {
+  minerAddress: string;
+  message: string;
+};
+
 export type ErrorDTO = {
+  code: string;
   message: string;
 };
