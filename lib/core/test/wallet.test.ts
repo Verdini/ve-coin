@@ -1,5 +1,5 @@
 import { describe, it } from "node:test";
-import { buildWallet } from "../Wallet.ts";
+import { buildWallet } from "../Wallet";
 import assert from "node:assert";
 
 describe("Core Wallet tests", () => {

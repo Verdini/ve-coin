@@ -1,5 +1,5 @@
 import { FastifyInstance, FastifyRequest } from "fastify";
-import { BlockchainService } from "./blockchain.service.ts";
+import { BlockchainService } from "./blockchain.service";
 import {
   CreateTransactionSchema,
   CreateWalletSchema,
@@ -9,9 +9,9 @@ import {
   GetPendingTransactionsSchema,
   IsValidChainSchema,
   MineSchema,
-} from "./blockchain.schema.ts";
-import { TransactionDTO } from "./blockchain.dto.ts";
-import { BlockchainRepositoryMemory } from "./blockchain.repository.ts";
+} from "./blockchain.schema";
+import { TransactionDTO } from "./blockchain.dto";
+import { BlockchainRepositoryMemory } from "./blockchain.repository";
 
 export default function blockchainPlugin(
   fastify: FastifyInstance,

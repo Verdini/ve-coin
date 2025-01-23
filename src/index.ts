@@ -1,4 +1,4 @@
-import { buildWebApi } from "./webapi.ts";
+import { buildWebApi } from "./webapi";
 import process from "node:process";
 
 async function main() {

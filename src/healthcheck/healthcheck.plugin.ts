@@ -1,5 +1,5 @@
 import { FastifyInstance } from "fastify";
-import { HealthcheckSchema } from "./healthcheck.schema.ts";
+import { HealthcheckSchema } from "./healthcheck.schema";
 
 export default function healthcheckPlugin(
   fastify: FastifyInstance,

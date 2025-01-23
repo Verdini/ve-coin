@@ -1,9 +1,9 @@
 import { before, describe, it } from "node:test";
-import { Wallet } from "../Wallet.ts";
+import { Wallet } from "../Wallet";
 import assert from "node:assert";
-import { Blockchain, buildBlockchain } from "../Blockchain.ts";
+import { Blockchain, buildBlockchain } from "../Blockchain";
 import fixtures from "./fixtures/blockchain.fixtures.json" with { type: "json" };
-import { mineBlock } from "../Block.ts";
+import { mineBlock } from "../Block";
 
 describe("Core Blockchain tests", () => {
   let blockchain: Blockchain;

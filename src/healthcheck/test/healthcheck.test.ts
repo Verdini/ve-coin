@@ -1,6 +1,6 @@
 import { before, describe, it } from "node:test";
 import assert from "node:assert";
-import { buildWebApi } from "../../webapi.ts";
+import { buildWebApi } from "../../webapi";
 import { FastifyInstance } from "fastify";
 
 describe("Healthcheck endpoint test", () => {

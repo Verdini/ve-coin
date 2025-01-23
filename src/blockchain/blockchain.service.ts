@@ -1,15 +1,11 @@
-import {
-  Block,
-  buildWallet,
-  isValidTransaction,
-} from "../../lib/core/index.ts";
+import { Block, buildWallet, isValidTransaction } from "../../lib/core/index";
 import {
   ErrorDTO,
   PendingTransactionsDTO,
   TransactionDTO,
   WalletDTO,
-} from "./blockchain.dto.ts";
-import { IBlockChainRepository } from "./blockchain.repository.ts";
+} from "./blockchain.dto";
+import { IBlockChainRepository } from "./blockchain.repository";
 
 export class BlockchainService {
   private blockchainRepo: IBlockChainRepository;

@@ -1,0 +1,44 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Test current file",
+      "type": "shell",
+      "command": "node",
+      "args": ["--import", "tsx", "--test", "${file}"],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared",
+        "showReuseMessage": false
+      }
+    },
+    {
+      "label": "Test selected test",
+      "type": "shell",
+      "command": "node",
+      "args": [
+        "--import",
+        "tsx",
+        "--test",
+        "${file}",
+        "--test-name-pattern",
+        "${selectedText}"
+      ],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "focus": true,
+        "panel": "new",
+        "showReuseMessage": false
+      }
+    }
+  ]
+}
