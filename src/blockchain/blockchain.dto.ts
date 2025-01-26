@@ -16,6 +16,20 @@ export type PendingTransactionsDTO = {
   transactions: TransactionDTO[];
 };
 
+export type BlockDTO = {
+  header: {
+    height: number;
+    timestamp: number;
+    previousHash: string;
+    merkleRoot: string;
+    message: string;
+    nonce: number;
+    hash: string;
+    nextHash: string;
+  };
+  transactions: TransactionDTO[];
+};
+
 export type MineDTO = {
   minerAddress: string;
   message: string;

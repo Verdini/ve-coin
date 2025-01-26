@@ -25,6 +25,7 @@ describe("Core Blockchain tests", () => {
 
     // Mine first empty block and get 100 coins
     const block = mineBlock({
+      height: 0,
       previousHash: blockchain.getLastBlock().header.hash,
       transactions: [],
       message: "First mined empty block",
@@ -36,6 +37,7 @@ describe("Core Blockchain tests", () => {
 
     // Mine second empty block and get 100 coins
     const block2 = mineBlock({
+      height: 1,
       previousHash: blockchain.getLastBlock().header.hash,
       transactions: [],
       message: "Second mined empty block",
@@ -47,6 +49,7 @@ describe("Core Blockchain tests", () => {
 
     // Mine third empty block and get 100 coins
     const block3 = mineBlock({
+      height: 2,
       previousHash: blockchain.getLastBlock().header.hash,
       transactions: [],
       message: "Third mined empty block",
@@ -62,6 +65,7 @@ describe("Core Blockchain tests", () => {
     blockchain.addToMemPool(fixtures.transactions[0]);
     blockchain.addToMemPool(fixtures.transactions[1]);
     const block4 = mineBlock({
+      height: 3,
       previousHash: blockchain.getLastBlock().header.hash,
       transactions: blockchain.takeFromMemPool(),
       message: "Fourth mined empty block",
@@ -75,6 +79,7 @@ describe("Core Blockchain tests", () => {
     blockchain.addToMemPool(fixtures.transactions[2]);
     blockchain.addToMemPool(fixtures.transactions[3]);
     const block5 = mineBlock({
+      height: 4,
       previousHash: blockchain.getLastBlock().header.hash,
       transactions: blockchain.takeFromMemPool(),
       message: "Fifth mined empty block",

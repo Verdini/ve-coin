@@ -8,6 +8,7 @@ import {
 import {
   BalanceDTO,
   BlockchainValidationDTO,
+  BlockDTO,
   ErrorDTO,
   MineDTO,
   PendingTransactionsDTO,
@@ -49,6 +50,7 @@ export class BlockchainService {
     const reward = this.blockchain.getMiningReward();
 
     const newBlock = mineBlock({
+      height: lastBlock.header.height + 1,
       previousHash: lastBlock.header.hash,
       transactions,
       message,
@@ -71,11 +73,31 @@ export class BlockchainService {
     return { address, balance };
   }
 
-  getBlock(index: number): Block | null {
-    return this.blockchain.getBlock(index);
+  getBlock(height: number): BlockDTO | null {
+    const block = this.blockchain.getBlock(height);
+    if (!block) return null;
+
+    const nextBlock = this.blockchain.getBlock(height + 1);
+    const nextHash = nextBlock ? nextBlock.header.hash : "";
+
+    return {
+      header: {
+        ...block.header,
+        nextHash: nextHash,
+      },
+      transactions: block.transactions,
+    };
   }
 
-  getLastBlock(): Block {
-    return this.blockchain.getLastBlock();
+  getLastBlock(): BlockDTO {
+    const block = this.blockchain.getLastBlock();
+
+    return {
+      header: {
+        ...block.header,
+        nextHash: "",
+      },
+      transactions: block.transactions,
+    };
   }
 }

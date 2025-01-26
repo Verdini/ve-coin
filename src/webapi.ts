@@ -1,4 +1,4 @@
-import fastify from "fastify";
+import fastify, { FastifyInstance } from "fastify";
 import swagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger-ui";
 import blockchainPlugin from "./blockchain/blockchain.plugin";
@@ -13,7 +13,7 @@ const loggerLevel = {
   test: { level: "warn" },
 };
 
-export async function buildWebApi() {
+export async function buildWebApi(): Promise<FastifyInstance> {
   const env = (process.env.NODE_ENV as Env) || "development";
   const server = fastify({
     logger: loggerLevel[env],
