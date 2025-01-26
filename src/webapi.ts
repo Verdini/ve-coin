@@ -4,8 +4,14 @@ import swaggerUi from "@fastify/swagger-ui";
 import blockchainPlugin from "./blockchain/blockchain.plugin";
 import healthcheckPlugin from "./healthcheck/healthcheck.plugin";
 import process from "node:process";
+import { Block, Blockchain } from "../lib/core";
 
 type Env = "development" | "production" | "test";
+
+type WebApiOptions = {
+  // Inject custom blockchain for testing purposes only
+  blockchain?: Blockchain;
+};
 
 const loggerLevel = {
   development: { level: "debug" },
@@ -13,7 +19,9 @@ const loggerLevel = {
   test: { level: "warn" },
 };
 
-export async function buildWebApi(): Promise<FastifyInstance> {
+export async function buildWebApi(
+  options?: WebApiOptions
+): Promise<FastifyInstance> {
   const env = (process.env.NODE_ENV as Env) || "development";
   const server = fastify({
     logger: loggerLevel[env],
@@ -58,7 +66,10 @@ export async function buildWebApi(): Promise<FastifyInstance> {
 
   await initSwagger();
   await server.register(healthcheckPlugin, { prefix: "/api/v1" });
-  await server.register(blockchainPlugin, { prefix: "/api/v1" });
+  await server.register(blockchainPlugin, {
+    prefix: "/api/v1",
+    blockchain: options?.blockchain,
+  });
 
   await server.ready();
 

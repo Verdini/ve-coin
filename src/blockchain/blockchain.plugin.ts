@@ -11,14 +11,19 @@ import {
   MineSchema,
 } from "./blockchain.schema";
 import { MineDTO, TransactionDTO } from "./blockchain.dto";
-import { buildBlockchain, DefaultConsensus } from "../../lib/core";
+import { Blockchain, buildBlockchain, DefaultConsensus } from "../../lib/core";
+
+type BlockchainPluginOptions = {
+  blockchain?: Blockchain;
+};
 
 export default function blockchainPlugin(
   fastify: FastifyInstance,
-  _opts: unknown,
+  options: BlockchainPluginOptions,
   done: () => void
 ) {
-  const blockchain = buildBlockchain({ consensus: DefaultConsensus });
+  const blockchain = options.blockchain || buildBlockchain();
+
   const blockchainService = new BlockchainService(blockchain);
 
   fastify.post(

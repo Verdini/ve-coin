@@ -11,10 +11,9 @@ import {
 import fixtures from "./fixtures/blockchain.fixtures.json" with { type: "json" };
 
 describe("Core Block tests", () => {
-  const wallets = fixtures.wallets;
-  const walletMiner = { address: wallets[0].address, key: wallets[0].privateKey };
-  const wallet1 = { address: wallets[1].address, key: wallets[1].privateKey };
-  const wallet2 = { address: wallets[2].address, key: wallets[2].privateKey };
+  const walletMiner = fixtures.wallets[0];
+  const wallet1 = fixtures.wallets[1];
+  const wallet2 = fixtures.wallets[2];
 
   it("should generate merkle root", () => {
     const transaction = {

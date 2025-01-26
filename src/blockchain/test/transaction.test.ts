@@ -1,29 +1,28 @@
 import { before, describe, it } from "node:test";
 import assert from "node:assert";
 import { buildWebApi } from "../../webapi";
-import { buildWallet, signTransaction } from "../../../lib/core/index";
+import { signTransaction, Wallet } from "../../../lib/core";
 import { FastifyInstance } from "fastify";
+import { initBlockchainFixtures } from "./blockchain.fixtures";
 
 describe("Transaction's endpoint test", () => {
   let server: FastifyInstance;
+  const { blockchain, wallet1, wallet2 } = initBlockchainFixtures();
 
   before(async () => {
-    server = await buildWebApi();
+    server = await buildWebApi({ blockchain });
   });
 
-  it.skip("should create a valid transaction", async () => {
-    const from = buildWallet();
-    const to = buildWallet();
-
+  it("should create a valid transaction", async () => {
     const transaction = {
-      fromAddress: from.address,
-      toAddress: to.address,
-      amount: 100,
-      fee: 10,
+      fromAddress: wallet1.address,
+      toAddress: wallet2.address,
+      amount: 30,
+      fee: 5,
       timestamp: new Date().getTime(),
       signature: "",
     };
-    signTransaction(transaction, from.key);
+    signTransaction(transaction, wallet1.key);
 
     const resPost = await server.inject({
       method: "POST",
@@ -49,13 +48,10 @@ describe("Transaction's endpoint test", () => {
     assert.deepEqual(resGetParsed, pendingTransaction);
   });
 
-  it.skip("should return a bad request", async () => {
-    const from = buildWallet();
-    const to = buildWallet();
-
+  it("should return a bad request", async () => {
     const transaction = {
-      fromAddress: from.address,
-      toAddress: to.address,
+      fromAddress: wallet1.address,
+      toAddress: wallet2.address,
       amount: 100,
       fee: 10,
       timestamp: new Date().getTime(),

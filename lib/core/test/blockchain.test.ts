@@ -17,11 +17,10 @@ describe("Core Blockchain tests", () => {
       consensus: fixtures.consensus,
     });
 
-    const wallets = fixtures.wallets;
-    walletMiner = { address: wallets[0].address, key: wallets[0].privateKey };
-    wallet1 = { address: wallets[1].address, key: wallets[1].privateKey };
-    wallet2 = { address: wallets[2].address, key: wallets[2].privateKey };
-    wallet3 = { address: wallets[3].address, key: wallets[3].privateKey };
+    walletMiner = fixtures.wallets[0];
+    wallet1 = fixtures.wallets[1];
+    wallet2 = fixtures.wallets[2];
+    wallet3 = fixtures.wallets[3];
 
     // Mine first empty block and get 100 coins
     const block = mineBlock({

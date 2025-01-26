@@ -1,5 +1,5 @@
 import { Block, buildGenesisBlock, isValidBlock } from "./Block";
-import { Consensus } from "./Consensus";
+import { Consensus, DefaultConsensus } from "./Consensus";
 import {
   BlockchainError,
   InsufficientBalanceError,
@@ -21,28 +21,34 @@ export interface Blockchain {
   isValid: () => boolean;
 }
 
-export function buildBlockchain({
-  consensus,
-}: {
-  consensus: Consensus;
-}): Blockchain {
-  const chain: Block[] = [buildGenesisBlock()];
+type BuildBlockchainOptions = {
+  // Inject custom blocks for testing purposes only
+  blocks?: Block[];
+  // Inject custom consensus for testing purposes only
+  consensus?: Consensus;
+};
+
+export function buildBlockchain(options?: BuildBlockchainOptions): Blockchain {
+  const chainConsensus = options?.consensus || DefaultConsensus;
+  const chain: Block[] = [
+    ...(options?.blocks ? options.blocks : [buildGenesisBlock()]),
+  ];
   const memPool: Transaction[] = [];
 
   function getDifficulty(): number {
     return (
-      consensus.initialDifficulty +
-      consensus.difficultyStep *
-        Math.floor(chain.length / consensus.blockInterval)
+      chainConsensus.initialDifficulty +
+      chainConsensus.difficultyStep *
+        Math.floor(chain.length / chainConsensus.blockInterval)
     );
   }
 
   function getMiningReward(): number {
     return (
-      consensus.initialMiningReward /
+      chainConsensus.initialMiningReward /
       Math.pow(
-        consensus.miningRewardStep,
-        Math.floor(chain.length / consensus.blockInterval)
+        chainConsensus.miningRewardStep,
+        Math.floor(chain.length / chainConsensus.blockInterval)
       )
     );
   }
@@ -62,8 +68,8 @@ export function buildBlockchain({
     if (block.header.previousHash !== getLastBlock().header.hash)
       return InvalidBlockError;
 
-    // TO DO: check hash under difficulty
-    // TO DO: check balances
+    // TO DO: check block hash difficulty
+    // TO DO: check balances to avoid double spending
 
     chain.push(block);
     return null;
