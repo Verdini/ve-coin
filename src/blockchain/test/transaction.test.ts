@@ -3,7 +3,7 @@ import assert from "node:assert";
 import { buildWebApi } from "../../webapi";
 import { signTransaction, Wallet } from "../../../lib/core";
 import { FastifyInstance } from "fastify";
-import { initBlockchainFixtures } from "./blockchain.fixtures";
+import { initBlockchainFixtures } from "./fixtures/blockchain.fixtures";
 
 describe("Transaction's endpoint test", () => {
   let server: FastifyInstance;

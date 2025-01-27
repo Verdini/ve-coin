@@ -8,6 +8,39 @@ const badRequestResponse = {
   },
 };
 
+const transactionSchema = {
+  type: "object",
+  required: ["fromAddress", "toAddress", "amount", "fee", "signature"],
+  properties: {
+    fromAddress: { type: "string" },
+    toAddress: { type: "string" },
+    amount: { type: "number" },
+    fee: { type: "number" },
+    timestamp: { type: "number" },
+    message: { type: "string" },
+    signature: { type: "string" },
+  },
+};
+
+const blockSchema = {
+  type: "object",
+  properties: {
+    header: {
+      height: { type: "number" },
+      timestamp: { type: "number" },
+      previousHash: { type: "string" },
+      merkleRoot: { type: "string" },
+      message: { type: "string" },
+      nonce: { type: "number" },
+      hash: { type: "string" },
+    },
+    transactions: {
+      type: "array",
+      items: transactionSchema,
+    },
+  },
+};
+
 export const CreateWalletSchema = {
   description: "Create a wallet",
   tags: ["Wallets"],
@@ -27,32 +60,9 @@ export const CreateTransactionSchema = {
   description: "Create a transaction and send to blockchain MemPool",
   tags: ["Transactions"],
   summary: "Create a transaction",
-  body: {
-    type: "object",
-    required: ["fromAddress", "toAddress", "amount", "fee", "signature"],
-    properties: {
-      fromAddress: { type: "string" },
-      toAddress: { type: "string" },
-      amount: { type: "number" },
-      fee: { type: "number" },
-      timestamp: { type: "number" },
-      message: { type: "string" },
-      signature: { type: "string" },
-    },
-  },
+  body: transactionSchema,
   response: {
-    200: {
-      type: "object",
-      properties: {
-        fromAddress: { type: "string" },
-        toAddress: { type: "string" },
-        amount: { type: "number" },
-        fee: { type: "number" },
-        timestamp: { type: "number" },
-        message: { type: "string" },
-        signature: { type: "string" },
-      },
-    },
+    200: transactionSchema,
     400: badRequestResponse,
   },
 };
@@ -67,18 +77,7 @@ export const GetPendingTransactionsSchema = {
       properties: {
         transactions: {
           type: "array",
-          items: {
-            type: "object",
-            properties: {
-              fromAddress: { type: "string" },
-              toAddress: { type: "string" },
-              amount: { type: "number" },
-              fee: { type: "number" },
-              timestamp: { type: "number" },
-              message: { type: "string" },
-              signature: { type: "string" },
-            },
-          },
+          items: transactionSchema,
         },
       },
     },
@@ -119,30 +118,7 @@ export const GetLastBlockSchema = {
   tags: ["Chain"],
   summary: "Last block",
   response: {
-    200: {
-      type: "object",
-      properties: {
-        index: { type: "number" },
-        timestamp: { type: "number" },
-        transactions: {
-          type: "array",
-          items: {
-            type: "object",
-            properties: {
-              fromAddress: { type: "string" },
-              toAddress: { type: "string" },
-              amount: { type: "number" },
-              fee: { type: "number" },
-              timestamp: { type: "number" },
-              signature: { type: "string" },
-            },
-          },
-        },
-        nonce: { type: "number" },
-        previousHash: { type: "string" },
-        hash: { type: "string" },
-      },
-    },
+    200: blockSchema,
   },
 };
 
@@ -152,35 +128,14 @@ export const GetBlockSchema = {
   summary: "Specific block",
   params: {
     type: "object",
-    required: ["block"],
+    required: ["height"],
     properties: {
-      index: { type: "number" },
+      height: { type: "number" },
     },
   },
   response: {
     200: {
-      type: "object",
-      properties: {
-        index: { type: "number" },
-        timestamp: { type: "number" },
-        transactions: {
-          type: "array",
-          items: {
-            type: "object",
-            properties: {
-              fromAddress: { type: "string" },
-              toAddress: { type: "string" },
-              amount: { type: "number" },
-              fee: { type: "number" },
-              timestamp: { type: "number" },
-              signature: { type: "string" },
-            },
-          },
-        },
-        nonce: { type: "number" },
-        previousHash: { type: "string" },
-        hash: { type: "string" },
-      },
+      anyOf: [blockSchema, { type: "null" }],
     },
   },
 };

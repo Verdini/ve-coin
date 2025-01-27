@@ -71,15 +71,15 @@ export default function blockchainPlugin(
   });
 
   fastify.get(
-    "/chain/blocks/:block",
+    "/chain/blocks/:height",
     { schema: GetBlockSchema },
     (
       req: FastifyRequest<{
-        Params: { index: number };
+        Params: { height: number };
       }>,
       _res
     ) => {
-      return blockchainService.getBlock(req.params.index);
+      return blockchainService.getBlock(req.params.height);
     }
   );
 

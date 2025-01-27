@@ -3,7 +3,7 @@ import {
   buildWallet,
   mineBlock,
   signTransaction,
-} from "../../../lib/core";
+} from "../../../../lib/core";
 
 export function initBlockchainFixtures() {
   const timestamp = new Date().getTime();
@@ -62,5 +62,5 @@ export function initBlockchainFixtures() {
   // Add the block to the blockchain and reward miner with 100 coins
   blockchain.addBlock(thirdBlock);
 
-  return { walletMiner, wallet1, wallet2, blockchain };
+  return { walletMiner, wallet1, wallet2, blockchain, secondBlock, thirdBlock };
 }

@@ -11,6 +11,7 @@ import { isValidTransaction, Transaction } from "./Transaction";
 export interface Blockchain {
   getDifficulty: () => number;
   getMiningReward: () => number;
+  getHeight: () => number;
   getBlock: (index: number) => Block | null;
   getLastBlock: () => Block;
   addBlock: (block: Block) => BlockchainError | null;
@@ -53,13 +54,17 @@ export function buildBlockchain(options?: BuildBlockchainOptions): Blockchain {
     );
   }
 
+  function getHeight(): number {
+    return chain.length - 1;
+  }
+
   function getBlock(index: number): Block | null {
     if (index < 0 || index >= chain.length) return null;
     return chain[index];
   }
 
   function getLastBlock(): Block {
-    return chain[chain.length - 1];
+    return chain[getHeight()];
   }
 
   function addBlock(block: Block): BlockchainError | null {
@@ -125,6 +130,7 @@ export function buildBlockchain(options?: BuildBlockchainOptions): Blockchain {
   return {
     getDifficulty,
     getMiningReward,
+    getHeight,
     getBlock,
     getLastBlock,
     addBlock,
