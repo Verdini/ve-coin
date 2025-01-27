@@ -1,7 +1,7 @@
 {
   "name": "vecoin",
   "version": "1.0.0",
-  "description": "A basic cryptocurrency implementation in Javascript",
+  "description": "A basic cryptocurrency blockchain",
   "main": "index.js",
   "type": "module",
   "engines": {
@@ -14,7 +14,7 @@
     "dev": "node --import tsx --watch src/index.ts",
     "test": "NODE_ENV=test node --import tsx --test \"**/*.test.ts\"",
     "build": "tsc && tsc-alias",
-    "start": "node ./dist/src/index.js",
+    "start": "NODE_ENV=prod node ./dist/src/index.js",
     "sign": "node --import tsx ./lib/tools/SignTransactions.ts"
   },
   "repository": {

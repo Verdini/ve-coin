@@ -1,8 +1,6 @@
 # Ve Coin
 
-_Insert VeCoin logo here_
-
-A basic centralized cryptocurrency implemented in Typescript.
+VeCoin is a basic cryptocurrency blockchain implemented in TypeScript. It is designed for educational purposes to help users understand the fundamental concepts of blockchain technology and cryptocurrency. This project provides a simplified version of a blockchain, focusing on the core principles and mechanisms without the complexities and security features of a production-ready system.
 
 _⚠️ For education purposes only. This is by no means a complete implementation and it is by no means secure!_
 
@@ -32,17 +30,7 @@ Run locally
 
 `npm run test`
 
-# Project structure
-
-## Core Lib
-
-A lib with the crypto currency domain features.
-
-## VeCoin API
-
-Web API to support VeCoin operations.
-
 # Project references
 
-- SavjeeCoin - A simple blockchain in Javascript. https://github.com/Savjee/SavjeeCoin
 - Bitcoin Core integration/staging tree - https://github.com/bitcoin/bitcoin
+- SavjeeCoin - A simple blockchain in Javascript. https://github.com/Savjee/SavjeeCoin
