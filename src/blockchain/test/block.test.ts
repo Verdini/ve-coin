@@ -1,7 +1,6 @@
 import { before, describe, it } from "node:test";
 import assert from "node:assert";
 import { buildWebApi } from "../../webapi";
-import { signTransaction, Wallet } from "../../../lib/core";
 import { FastifyInstance } from "fastify";
 import { initBlockchainFixtures } from "./fixtures/blockchain.fixtures";
 
